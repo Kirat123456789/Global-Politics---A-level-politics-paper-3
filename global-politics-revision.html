@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Politics &mdash; Paper 3B Revision</title>
+<style>
+:root{
+  --bg:#04100c;
+  --bg2:#071a14;
+  --panel:#0a2018;
+  --panel2:#0d2820;
+  --line:#1c4536;
+  --line2:#2a5c48;
+  --accent:#10b981;
+  --accent2:#5eead4;
+  --gold:#f0b429;
+  --text:#e7f5ef;
+  --text-dim:#7fa896;
+  --text-mid:#aed4c4;
+  --serif: 'Iowan Old Style','Georgia','Times New Roman',serif;
+  --sans: 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'SF Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== Background grid / globe motif ===== */
+.bg-grid{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:0.35;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(16,185,129,0.08), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(94,234,212,0.06), transparent 40%);
+}
+.bg-grid svg{position:absolute; inset:0; width:100%; height:100%;}
+
+/* ===== Top nav ===== */
+.topnav{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 28px;
+  background:rgba(4,16,12,0.85);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  display:flex; align-items:baseline; gap:10px;
+  font-family:var(--serif);
+}
+.brand .mark{
+  font-size:13px; letter-spacing:4px; color:var(--accent2); text-transform:uppercase;
+  font-family:var(--sans); font-weight:600;
+}
+.brand .name{
+  font-size:18px; font-weight:600; color:var(--text); letter-spacing:0.3px;
+}
+.nav-links{display:flex; gap:22px; align-items:center;}
+.nav-links a{
+  color:var(--text-mid); text-decoration:none; font-size:13px; letter-spacing:0.5px;
+  text-transform:uppercase; font-weight:500;
+  transition:color 0.15s;
+  padding:6px 0;
+  border-bottom:1px solid transparent;
+}
+.nav-links a:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
+@media (max-width:760px){
+  .nav-links{display:none;}
+}
+
+/* ===== Hero ===== */
+.hero{
+  position:relative; z-index:1;
+  padding:90px 28px 70px;
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:1.3fr 1fr; gap:50px; align-items:center;
+}
+@media (max-width:860px){ .hero{grid-template-columns:1fr; padding-top:50px;} }
+
+.hero-eyebrow{
+  font-size:12px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--accent2); font-weight:700; margin-bottom:18px;
+  display:flex; align-items:center; gap:10px;
+}
+.hero-eyebrow::before{
+  content:''; display:block; width:28px; height:1px; background:var(--accent2);
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:54px; line-height:1.05; font-weight:600;
+  color:var(--text); margin-bottom:18px;
+  letter-spacing:-0.5px;
+}
+.hero h1 em{ color:var(--accent); font-style:italic; }
+.hero p.lead{
+  font-size:17px; color:var(--text-mid); max-width:480px; margin-bottom:28px;
+}
+.hero-stats{ display:flex; gap:32px; margin-top:10px; flex-wrap:wrap; }
+.hstat{ }
+.hstat .num{ font-family:var(--serif); font-size:30px; font-weight:600; color:var(--accent2); }
+.hstat .lbl{ font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; margin-top:2px; }
+
+/* globe visual */
+.globe-wrap{
+  position:relative; aspect-ratio:1; width:100%; max-width:420px; margin:0 auto;
+}
+.globe-svg{ width:100%; height:100%; }
+.globe-svg .ring{ fill:none; stroke:var(--line2); stroke-width:0.5; opacity:0.6;}
+.globe-svg .meridian{ fill:none; stroke:var(--line2); stroke-width:0.5; opacity:0.45;}
+.globe-svg .node{ fill:var(--accent2); }
+.globe-svg .node.alt{ fill:var(--gold); }
+.globe-svg .link{ stroke:var(--accent); stroke-width:0.7; opacity:0.5; stroke-dasharray:1 3; }
+.globe-svg .pulse{
+  fill:none; stroke:var(--accent); stroke-width:1; opacity:0;
+  animation:pulse 4s ease-out infinite;
+}
+.globe-svg .pulse.d2{ animation-delay:1.3s; }
+.globe-svg .pulse.d3{ animation-delay:2.6s; }
+@keyframes pulse{
+  0%{ r:2; opacity:0.9; stroke-width:1.5; }
+  100%{ r:60; opacity:0; stroke-width:0.2; }
+}
+@media (prefers-reduced-motion: reduce){
+  .globe-svg .pulse{ animation:none; opacity:0;}
+}
+
+/* ===== Section shells ===== */
+.section{
+  position:relative; z-index:1;
+  max-width:1100px; margin:0 auto;
+  padding:60px 28px;
+}
+.section.alt{ background:linear-gradient(180deg, transparent, rgba(16,185,129,0.04), transparent); }
+.section-head{
+  display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  margin-bottom:34px; padding-bottom:18px; border-bottom:1px solid var(--line);
+}
+.section-head .tag{
+  font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--accent2); font-weight:700;
+}
+.section-head h2{
+  font-family:var(--serif); font-size:34px; font-weight:600; color:var(--text); margin-top:6px;
+}
+.section-head .desc{ font-size:14px; color:var(--text-dim); max-width:420px; text-align:right; }
+@media (max-width:760px){ .section-head .desc{text-align:left; max-width:100%;} }
+
+/* ===== Topic notes grid ===== */
+.topics-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:18px;
+}
+.topic-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:22px 22px 18px;
+  transition:border-color 0.2s, transform 0.2s;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+.topic-card:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.topic-card .tnum{
+  font-family:var(--mono); font-size:11px; color:var(--accent2); letter-spacing:2px;
+  position:absolute; top:18px; right:20px;
+}
+.topic-card h3{
+  font-family:var(--serif); font-size:20px; font-weight:600; color:var(--text); margin-bottom:8px;
+  padding-right:50px;
+}
+.topic-card .tcount{
+  font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;
+}
+.topic-card .tsummary{ font-size:13.5px; color:var(--text-mid); }
+.topic-card .texpand{
+  margin-top:14px; font-size:12px; color:var(--accent2); text-transform:uppercase; letter-spacing:1px;
+  font-weight:600; display:flex; align-items:center; gap:6px;
+}
+.topic-card .texpand::after{ content:'\2192'; transition:transform 0.2s; }
+.topic-card.open .texpand::after{ transform:translateX(4px); }
+
+/* expanded notes panel */
+.topic-notes{
+  display:none; margin-top:16px; padding-top:16px; border-top:1px dashed var(--line2);
+  font-size:13.5px; color:var(--text-mid);
+}
+.topic-notes.show{ display:block; }
+.topic-notes p{ margin-bottom:10px; }
+.topic-notes .astar{
+  margin-top:10px; padding:10px 12px; background:rgba(16,185,129,0.07);
+  border-left:2px solid var(--accent); font-size:13px; color:var(--text);
+  font-style:italic;
+}
+.topic-notes .astar b{ font-style:normal; color:var(--accent2); }
+
+/* ===== Flashcard section ===== */
+.fc-app{ display:flex; flex-direction:column; gap:18px; }
+.fc-controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.fc-modebar{ display:flex; gap:6px; background:var(--panel); border-radius:6px; padding:4px; border:1px solid var(--line); }
+.fc-modebar button{
+  flex:1; padding:9px 16px; border:none; background:transparent; color:var(--text-dim);
+  font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; cursor:pointer;
+  border-radius:4px; transition:all 0.15s; font-family:var(--sans);
+  white-space:nowrap;
+}
+.fc-modebar button.active{ background:var(--accent); color:#04100c; }
+
+.fc-pills{ display:flex; gap:6px; flex-wrap:wrap; }
+.fc-pill{
+  padding:6px 14px; border-radius:20px; font-size:11px; font-weight:600;
+  border:1px solid var(--line2); background:transparent; color:var(--text-dim);
+  cursor:pointer; transition:all 0.15s; letter-spacing:0.5px;
+  font-family:var(--sans);
+}
+.fc-pill.active{ background:rgba(16,185,129,0.15); border-color:var(--accent); color:var(--accent2); }
+
+.fc-progress-row{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-dim); }
+.fc-progress-bar{ height:2px; background:var(--line); border-radius:2px; overflow:hidden; }
+.fc-progress-fill{ height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.3s ease; }
+
+.fc-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:30px 28px;
+  min-height:260px;
+  cursor:pointer;
+  position:relative;
+  transition:border-color 0.2s, background 0.2s;
+  user-select:none;
+}
+.fc-card.flipped{ background:var(--panel2); border-color:var(--accent); }
+.fc-card .fc-badges{ display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+.fc-card .badge-topic{
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;
+  padding:4px 12px; border-radius:20px; background:rgba(16,185,129,0.15); color:var(--accent2);
+  border:1px solid rgba(16,185,129,0.3);
+}
+.fc-card .badge-sub{
+  font-size:10px; font-weight:500; padding:4px 12px; border-radius:20px;
+  background:var(--bg2); color:var(--text-dim); border:1px solid var(--line);
+}
+.fc-card .fc-label{
+  font-size:10px; text-transform:uppercase; letter-spacing:3px; color:var(--text-dim); margin-bottom:12px;
+}
+.fc-card .fc-label.ans{ color:var(--accent2); }
+.fc-card .fc-q{ font-family:var(--serif); font-size:19px; line-height:1.5; color:var(--text); font-weight:600; }
+.fc-card .fc-a{ font-size:14px; line-height:1.85; color:var(--text-mid); white-space:pre-line; }
+.fc-card .fc-tap{ position:absolute; bottom:18px; right:22px; font-size:11px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+
+.fc-controls-row{ display:flex; gap:10px; justify-content:center; }
+.fc-btn{
+  padding:11px 26px; border-radius:6px; border:1px solid var(--line2); background:transparent;
+  color:var(--text); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s;
+  letter-spacing:0.5px; font-family:var(--sans);
+}
+.fc-btn:hover{ background:var(--panel); }
+.fc-btn.primary{ background:var(--accent); color:#04100c; border-color:var(--accent); }
+.fc-btn.primary:hover{ opacity:0.85; }
+.fc-btn.got{ background:rgba(16,185,129,0.15); color:var(--accent2); border-color:var(--accent); }
+.fc-btn.review{ background:rgba(240,180,41,0.13); color:var(--gold); border-color:var(--gold); }
+.fc-skip{ background:transparent; border:none; color:var(--text-dim); font-size:11px; cursor:pointer; letter-spacing:1px; text-transform:uppercase; }
+
+.fc-done{
+  text-align:center; padding:50px 20px; background:var(--panel); border:1px solid var(--accent);
+  border-radius:6px;
+}
+.fc-done h3{ font-family:var(--serif); font-size:26px; color:var(--text); margin-bottom:14px; }
+.fc-done .scores{ display:flex; gap:14px; justify-content:center; margin:18px 0 24px; flex-wrap:wrap; }
+.fc-done .scorebox{ padding:10px 22px; border-radius:6px; font-size:13px; font-weight:600; }
+
+.fc-list{ display:none; flex-direction:column; gap:8px; }
+.fc-list.show{ display:flex; }
+.fc-list-item{
+  padding:12px 16px; background:var(--panel); border:1px solid var(--line); border-radius:5px;
+  cursor:pointer; transition:border-color 0.15s;
+}
+.fc-list-item:hover{ border-color:var(--accent); }
+.fc-list-item .lit{ font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent2); margin-bottom:4px; }
+.fc-list-item .liq{ font-size:13px; color:var(--text-mid); line-height:1.4; }
+
+/* ===== Papers section ===== */
+.papers-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px;
+}
+.paper-card{
+  background:var(--panel); border:1px solid var(--line); border-radius:6px;
+  padding:26px; display:flex; flex-direction:column; gap:14px;
+  transition:border-color 0.2s, transform 0.2s;
+}
+.paper-card:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.paper-card .ptag{
+  font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent2); font-weight:700;
+}
+.paper-card h3{ font-family:var(--serif); font-size:24px; color:var(--text); }
+.paper-card .pmeta{ font-size:12px; color:var(--text-dim); }
+.paper-card .ptopics{ display:flex; flex-direction:column; gap:6px; margin-top:6px; }
+.paper-card .ptopic-row{
+  display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-mid);
+  padding:6px 0; border-bottom:1px solid var(--line);
+}
+.paper-card .ptopic-row span:first-child{ color:var(--accent2); font-weight:600; font-family:var(--mono); font-size:11px; }
+.paper-card a.dl{
+  margin-top:8px; display:inline-flex; align-items:center; gap:8px; justify-content:center;
+  padding:12px 20px; background:var(--accent); color:#04100c; text-decoration:none;
+  border-radius:5px; font-size:13px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase;
+  transition:opacity 0.15s;
+}
+.paper-card a.dl:hover{ opacity:0.85; }
+
+.exam-tips{
+  margin-top:24px; padding:20px 24px; background:var(--panel); border-left:3px solid var(--gold);
+  border-radius:0 6px 6px 0; font-size:13.5px; color:var(--text-mid);
+}
+.exam-tips h4{ font-family:var(--serif); color:var(--gold); font-size:15px; margin-bottom:8px; font-weight:600; }
+.exam-tips ul{ padding-left:20px; }
+.exam-tips li{ margin-bottom:6px; }
+
+/* ===== Footer ===== */
+.footer{
+  position:relative; z-index:1;
+  padding:40px 28px; text-align:center; color:var(--text-dim); font-size:12px;
+  border-top:1px solid var(--line); margin-top:40px;
+}
+.footer .fmark{ color:var(--accent2); letter-spacing:2px; text-transform:uppercase; font-size:11px; margin-bottom:6px; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"><svg xmlns="http://www.w3.org/2000/svg"></svg></div>
+
+<nav class="topnav">
+  <div class="brand">
+    <span class="mark">Edexcel A-Level</span>
+    <span class="name">Global Politics</span>
+  </div>
+  <div class="nav-links">
+    <a href="#topics">Topic Notes</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#papers">Predicted Papers</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div>
+    <div class="hero-eyebrow">Paper 3 &middot; Global Politics</div>
+    <h1>Six topics.<br>One <em>interconnected</em><br>world order.</h1>
+    <p class="lead">A* condensed notes, 34 exam-style flashcards, and two full predicted papers covering the state, global governance, power, regionalism, and comparative theory.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="num">6</div><div class="lbl">Topics</div></div>
+      <div class="hstat"><div class="num">34</div><div class="lbl">Flashcards</div></div>
+      <div class="hstat"><div class="num">4</div><div class="lbl">Qs / Paper</div></div>
+      <div class="hstat"><div class="num">84</div><div class="lbl">Marks / Paper</div></div>
+    </div>
+  </div>
+  <div class="globe-wrap">
+    <svg class="globe-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle class="ring" cx="100" cy="100" r="90"/>
+      <ellipse class="ring" cx="100" cy="100" rx="90" ry="35"/>
+      <ellipse class="ring" cx="100" cy="100" rx="90" ry="60"/>
+      <ellipse class="meridian" cx="100" cy="100" rx="35" ry="90"/>
+      <ellipse class="meridian" cx="100" cy="100" rx="60" ry="90"/>
+      <line class="ring" x1="10" y1="100" x2="190" y2="100"/>
+      <line class="meridian" x1="100" y1="10" x2="100" y2="190"/>
+      <!-- nodes -->
+      <circle class="node" cx="60" cy="70" r="2.5"/>
+      <circle class="node" cx="140" cy="60" r="2.5"/>
+      <circle class="node alt" cx="100" cy="100" r="3"/>
+      <circle class="node" cx="75" cy="140" r="2.5"/>
+      <circle class="node" cx="150" cy="130" r="2.5"/>
+      <circle class="node alt" cx="45" cy="115" r="2"/>
+      <circle class="node" cx="120" cy="40" r="2"/>
+      <!-- links -->
+      <line class="link" x1="60" y1="70" x2="100" y2="100"/>
+      <line class="link" x1="140" y1="60" x2="100" y2="100"/>
+      <line class="link" x1="75" y1="140" x2="100" y2="100"/>
+      <line class="link" x1="150" y1="130" x2="100" y2="100"/>
+      <line class="link" x1="45" y1="115" x2="100" y2="100"/>
+      <line class="link" x1="120" y1="40" x2="100" y2="100"/>
+      <!-- pulses -->
+      <circle class="pulse" cx="100" cy="100" r="2"/>
+      <circle class="pulse d2" cx="100" cy="100" r="2"/>
+      <circle class="pulse d3" cx="100" cy="100" r="2"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ============ TOPIC NOTES ============ -->
+<section class="section" id="topics">
+  <div class="section-head">
+    <div>
+      <div class="tag">Condensed Revision</div>
+      <h2>Topic Notes</h2>
+    </div>
+    <div class="desc">Click any topic to expand A* condensed notes with contemporary examples and evaluative points.</div>
+  </div>
+  <div class="topics-grid" id="topicsGrid"></div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section alt" id="flashcards">
+  <div class="section-head">
+    <div>
+      <div class="tag">Active Recall</div>
+      <h2>Flashcards</h2>
+    </div>
+    <div class="desc">34 exam-style questions with full A* answers. Browse freely or self-test and track your progress.</div>
+  </div>
+  <div class="fc-app">
+    <div class="fc-controls">
+      <div class="fc-modebar">
+        <button id="modeBrowse" class="active">Browse</button>
+        <button id="modeTest">Self-Test</button>
+        <button id="modeList">All Cards</button>
+      </div>
+    </div>
+    <div class="fc-pills" id="fcPills"></div>
+    <div class="fc-progress-row">
+      <span id="fcProgLabel">Card 1 of 34</span>
+      <span id="fcScoreLabel"></span>
+    </div>
+    <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcProgFill" style="width:0%"></div></div>
+
+    <div id="fcCardArea"></div>
+    <div id="fcCtrlArea" class="fc-controls-row"></div>
+    <div id="fcListArea" class="fc-list"></div>
+  </div>
+</section>
+
+<!-- ============ PREDICTED PAPERS ============ -->
+<section class="section" id="papers">
+  <div class="section-head">
+    <div>
+      <div class="tag">Exam Practice</div>
+      <h2>Predicted Papers</h2>
+    </div>
+    <div class="desc">Two full predicted papers in the real Edexcel 9PL0/3B format &mdash; Section A (12 marks), Section B (12 marks), Section C (2 &times; 30 marks). Total: 84 marks.</div>
+  </div>
+  <div class="papers-grid">
+    <div class="paper-card">
+      <div class="ptag">Predicted Paper A</div>
+      <h3>Set A</h3>
+      <div class="pmeta">2 hours &middot; 84 marks &middot; 4 questions answered</div>
+      <div class="ptopics">
+        <div class="ptopic-row"><span>1(a)/(b)</span><span>WTO &amp; G20 &nbsp;/&nbsp; Great Powers vs Emerging Powers</span></div>
+        <div class="ptopic-row"><span>Q2</span><span>Realism vs Liberalism on Climate Cooperation</span></div>
+        <div class="ptopic-row"><span>3(a)</span><span>Globalisation: Developing vs Developed States</span></div>
+        <div class="ptopic-row"><span>3(b)</span><span>Environment vs Human Rights Cooperation</span></div>
+        <div class="ptopic-row"><span>3(c)</span><span>Regionalism: Cooperation vs Division</span></div>
+      </div>
+      <a class="dl" href="data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovUHJvZHVjZXIgKHB5cGRmKQo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0NvdW50IDE3Ci9LaWRzIFsgNCAwIFIgMTAgMCBSIDE1IDAgUiAxNyAwIFIgMTkgMCBSIDI0IDAgUiAyNiAwIFIgMjggMCBSIDMzIDAgUiAzNSAwIFIgMzcgMCBSIDM5IDAgUiA0MSAwIFIgNDMgMCBSIDQ1IDAgUiA0NyAwIFIgNDkgMCBSIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDIgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9Db250ZW50cyA1IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNSAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCAyMDMxCj4+CnN0cmVhbQpHYXUwRT4/QlE9JjpWcy9SKWRRQD8wZ0tTaF5HPGFoOihlNGFaZiZPR3U4QzNcRy1cUVJEP1NwT21HJ0lNODxvaiE+OE5SQ1ZDXDI8PWxEKUxSP0NBIm8ncCwlcG9TUiRGOyNpREsyJWxMUHNqSElSNHJGUVdlOGwhczUoUz1xMWokSHVGJUpPRllmR2ktby4pamwxSDgvNGRyIXBKNVJiRzBOblVScElGPlBTMWl1JS4/SGAsZmlLPGBnS1lDU2o9V2VMbSZHZTE8REtNXF1iRixhSFM3OGxrWjJgV2Rtb1Y7JmZsZytqUCRlMih0UTpsbUwkNkJrYV5TISZKJ3JUOS1jVFsyYSZhWShtcWNJQ18oLzdnLUUkMShOKVc9PCtII28yXypdLlBkLi9TZiIiTUxzN0pDVyFmK1NnaTEvY0Y5ZE9dSk9ORFhoblxqcCpfP0FOOUtBJmQzUE5KIm1DZUk1VVY4OyE/MS5dRENAS1U/a2w3ZzZLZSxdbEt0JVNpKFkvJ3FHaFNwPSU4czZyIUQlXyFocDcmT3AiLCZeM08ib15wamF0dWxTOFghZkc4JE5oOUA2YkB1MEw+V3I2YmZtU2U+bkw6NEl0YmMwS01tODE2NG9sYFZ0WCc0dSMqVlZOa2EvS2ZVQyJlPWAmVGAzIStBTD9MNDxxRVVubV41QGNxLyg0KG1lTEk+KFRnTiheMmBEOVVpTzs3OFtNIlxxb0VXLWtsQS4rN1BLMWZDT3BQVVBoYy5sVGZGQlhWOCFHXkhWXlFcL0tzUjwhVlM8REZBVnFuYkxyOG0sQmcrU20+Wi1fXHBaSXAjKitlVG8pMkQyYz5XI0JBNDNyOnNMLHBKNkUpKF9bIjVXL10lRCgkTEdSOzNWOidgTnU9JXBbbEFOO0ZiIisvXj9fTUtdWjE5TGYmYU82RVJUVkthO21NOSwxREJWNStUWmxyITQhO1FrSVI7YWUwLUI5bCU5OkpGNTpyZThWQE9uK1VvV2VyP0hqWGYka1hiIUtdSzU+JC1lSCZkVVRBaF9PLkx1Q2pgRFBrODNHUF9MPkZDPVFnSkMtTjknS0AidU5GJlpYQyxdcVttSSU5LkJYUEhQXiJmPT1oZzxeMyo+YGNKQSY0ZlczNlouRU5xQ1VaTTooOFkzVSUoYzkjZ0k5QypEVmRlJEo3KGk6MDhdR2g+Y0hhJjJoUF1VNCwjby9wPDohZk5CTSQhWkFxRG5HS3JhVlEuUG5Ja0dEPV5MJVEjPVkuQG86MS5aXyw3JDxpQGVuQmdbPi5qckBiPnNhcyJxQ0E1WWw+WjchXmY8SXFPcigzMVRKOlUsJ05QOkcicCovWiNDJnUibGpLWnR0Vj0hMDJdaTdoSlBWcyZoS1hIXFtGNiFaL1FAI2czTzZIPjxRb0p0aTRZIysiPzZ1ZEVBZm45K1MsWVI6cjI8LVNoZiNiRm1uKXJvI1khWzJCUypnXXJUU2swZz5cRSFmRzFkcUdIJiRpdW1tNl4xYmRLWGtnSWliUSFcQVcqIk5NUCFcI2BPdCgkXFxHTjU2MD4iVisicytXcTNaUDphVTpzNV5TO0RDcChxVDYnIjsjL0NxRUlKbydVTV0ob1Q6RFxpbm4hX0FjOi9lT2Q0My5kcChKYGhqby9LW1FRSiZNKG1QK09gZ0xCUm5yPVVJYSFdMDVwLChGRSRxXnVXV2JiRTgzTz10U2pRYHE3NyZpUiF1ZVU8ZCUjdTJZRmxnaTc2XzxCVE1WXVZyZWEsJyNDMmEzZk5MKTRQKjdwZ0FHLlx0aTVcITQ7JikkcywlOD81WUk2YixMXnFIR0xKcjRPLT0ucDg7bTUpdF5AWDREcG9VN2Vbck4jQ1Q5XmopNSpbMSQuTSVjRVlYTmswU1lZOFpJZWsjNCEhZm0+PS5JZyU4OzAsLlBONXJuZ3BKcHVEXGcuRlYjNWJcQFNpKFk+YiYqW0Q7bm1SYDVBV15KKTJYM05XXzFFUicyUFk1PzE8LCpqKWknQDk9WTVJPyIkPDtRY21bS2lQU2IkanIjcSo/PChQNFNFOkxacmZrQGNEajVbK2BKZCRWZk1dbV1bblZQS2JZY11sUkJUP1E0YDQ4KyY0ZkIxKCJOUkNFLEFzPFVMRmsxPEY7VGNTMiRAaDUtOEVJKUMrJHU4IzgkNVtlNzRJQTM5Wmo6Y2hnYSo3YCFtWyIxVTVKZFFsWklGIT1pdTNoJlxKalhULnVnNk5RLTJyQDFhVTtpamIqdTxrZiVDZG0hWF9yXilFKksiYGwoUTgpTXFxYkZfVTtMbz5IOSxEWDtOM0lvTkpcKFE4LHRLWSFuMEZKbCotNiZmYlE+ZkgvIWIxcXUqXkckbmArbGpjPylKXlk3RU5JPiYpJk5zMjFRNmsxZT0lVnRpXWdeS2FVL1tqYD4vKmVdTm4iRSMmdGNma2dpSVEyRDVzVFMjZmJQbyFPcmNwJU42UiokOE9HajBiQFcuOzpjYyRYc2AiQiQxOS9WRihpPnFvWTosPTROREpXO2RlUExpTzJIS0xJPHJMUUNMNytqaV8zVEBVIldQNXQ1ak1OPmRoR3FsKVdeYmJtQnRfM3JTbFJtT1QpPWRyT0M7XjFPajtvNVpcV102NDAnalBmLWRlc11tV0skc3FCMzw2MVxDQEZpWSk3QC5AWVclM2pKZj06Ui9ASkFhT3NWfj4KZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8Ci9GMSA3IDAgUgovRjIgOCAwIFIKL0YzIDkgMCBSCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMQovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjggMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjIKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iago5IDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLU9ibGlxdWUKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YzCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL0NvbnRlbnRzIDExIDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDEyIDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjExIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDUwNQo+PgpzdHJlYW0KR2F0JV47L19wWCdTWUhBLydfWVEjN25Gc19kYmQ1W2FKLV5jSS0laWlabz8mI3UjLGpaTC04aUVEJWI4NjwuL1RvKERaOTUyViY9bnImOmxbSzNORjUoKUFKIWljQmE9VWFzQFxOMStAIVI9KDJKci1iWFQtWmxUUj1wZnAtKihoY2VSN28pcy85Z240J1hEM0lSJ0k9Li5MRmRjODFiTy00c0drOHNjdEpPQCsjU2opSWsjRGQmKElbMTJcMkZkKF9DYj5AOWNLakhFMDlNOmxKUDVZPzZxKSMnMUwoUS8oX1w4VzNoTm9NSk9IRXF1VFlbUFg/TlUqRzEkb0IoOjM6aEZmc0VqQFc+Zj1SckhDU0ApSDFFYUg6Jl0yZS9zS18zLGlfL2QhIlM2LlZoWV9lVE9UIWJBZDZZRm5INmVrb0tgW2VPTjI0RWpSQiZWNjBRcSI2LSpAUmhqVlloKjJsPGw5TWZYTCVYRy83L21bLW40UTBmNm5GR0IjbywnZkAwbVQ/ailnZW5FQmY0P290dTIoXVU/ZidsJGVWPUI/SEFXcTQmXHNiKXUsXmQvJStYJFRQKC48dUczTzI8LSZOWTNBXVZOakAoI000XGVlPiQ6O0MrU0AoKF1AIiNmWFNvKixoJkAycC89c1w2WlRqTGQjWEF+PgplbmRzdHJlYW0KZW5kb2JqCjEyIDAgb2JqCjw8Ci9GMSAxMyAwIFIKL0YyIDE0IDAgUgo+PgplbmRvYmoKMTMgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YxCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKMTQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjIKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iagoxNSAwIG9iago8PAovQ29udGVudHMgMTYgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iagoxNiAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA0ODEKPj4Kc3RyZWFtCkdiIi9jYj4sci8mNFE/aE1ITmdtYFxbPUlBIVM2JjY+UV4rRyFmLFA8NCNZMC5YaUhlVWhyWVo2b1BCYzg8ZyRtMmc5WUVLNCovZ3AlYCMnRSlzaXQsbSJeRE8rPykzLXVcJTxiU0QnU1EmJytKajoiPlVhW0lvLjk+ZTFaPzlWcD4iXjxNKGhMI0BcVDdMMmNsJUBHMTVUPjouXnNWdUxIbzdNM0BRZSYyXiEoK0M+PkljTGpsbGNmJCdgS1wjRSNtdDlNLidTUj1QaWtrNzJdO0NpJikia15HTVRGZDk6UV86Zm1dR2shP0Q4KjN0WldqUEooKVkkR3AzWlhEUmlWImBXSmAvYl1WMiZgI1lVTFdcbVZdS21ZQWRQWmclTUJDbyVKOGY+QlBAVzdGUTImbCdpcTorbzstazdmUW9oTCpDLlI7RkNmNyMsQiw6czZnPThEQDc1SiZhTm01Wls7KTpLMiJJdC0pQWszYlRHUGJzLEM9TTJKP3I1RWk2P2dOYlZkQlhMPDdOTWBLKTVAWkVsL2sxSFpQKjI/XV1xNT4nTT9JV0gwSGFUNzRXInNHLFdsOko5QywrbmE+MEshKU1gSFowMGg0TV1rKHFQc05ec0U7K1N1LUUmRmRGfj4KZW5kc3RyZWFtCmVuZG9iagoxNyAwIG9iago8PAovQ29udGVudHMgMTggMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iagoxOCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCAzNzYKPj4Kc3RyZWFtCkdiIWxeY1YpLzAnWl1cQC8pRzo7JkcrPzIyKiNvW1pBQ1VvQ05KOUJMX0ZvOlooKE9XUyxUKD5pXiEjWF1FRltWXjNtXENoVmVpLk9DO1ZxSTRQQ080ZTBoMTprQEwoQzgmSHNALTQ2WSNsQDRsSnQtaWUjdFxRXjBcZCZOImosQ0cibG0iPk5lL1NmMkFkLk9jOWpLMldjYVxiSWwrJVw/YnI/bGZaUHRgNl1bJ1UzXCU7ckExXyMtZFZSO2dnUiczcilmcyQoTkInQEJBJ1NicjBrVjNUUislKDRiaXNkdGJpcU0mX3VXIlVuLzcrJCxNPGpwZj9wYldQYj8sKUNSa29pL0pLU29OJzxFajcpalpAZ1NYaFVARnFzPGApaGBlKCxmLyViRSZTImlNRzdebnIpV0I8aihidHJHKTAyKUMjQ3BwKmZvNCdDLW1SaHBEL0JWW0psKTM+QWVNSiEzI1xnN2Q8InEtPl1WSmBtSjxWb11rfj4KZW5kc3RyZWFtCmVuZG9iagoxOSAwIG9iago8PAovQ29udGVudHMgMjAgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgMjEgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMjAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggNTE2Cj4+CnN0cmVhbQpHYiE8SjV1NlBxJSMrMEokNk9nZDJLQDNBNGkzKUFPTywyWTRgXFlkPlI5VmpVRW0wInMuN1Q2WVhmMThnZkA5YGchQitVcUBxJEFXcWwhPyE5WUMjcG5eNSFGOTxwQzFpdWY8ZDJnSlMiSnQ3LC0xSlVOPzchcyNARFErbmxEQUVrZ1ZFP09Na0FoZW9rdWZTSmFOUU1kbC9UR1s/PEdCIWFBPUYvNHNPdTRdNnMmKk1yLCMhJTokJy91LE5NTWI7VzUlUjRsMTtOKDZZaz8yY2E0cVprJkshY1spTUExQS9ZYk0lZCdIaVBYSUVMS2IpRmhLOWtYTTVDbUhCLktFS2pqdWldT2w1O3FiLUEnMjY7UFBMQCtJcCohQjQtVzxHMUMiYT9xM0cvKmBkO044OmtqTWZlVUJAYzpQUUVeb0MmXmhKSGBaYDFqUldDVmVxOjRVak8vR28/cEYkZmFaJishcTFtNHRqQl9aNG1udFkuSUNYdW1yam4yTGEmbXBnVVgtWS1RTW03VzNhZzRqYjllZjBdNS8sO28oZ0dBMTV0JkAvVFEjUSlVQGNZazNPLUw7bGEtSmU4ITBwPi0wZWBYLSMzRz4mcExLWkNJbnJDPGs9MGFJMWFTRWknVGtjST89SlI5SFtPO2k/ZXBbQXIxWlhZUUVGS3FpOV1iKDEnfj4KZW5kc3RyZWFtCmVuZG9iagoyMSAwIG9iago8PAovRjEgMjIgMCBSCi9GMiAyMyAwIFIKPj4KZW5kb2JqCjIyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMQovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjIzIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YyCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKMjQgMCBvYmoKPDwKL0NvbnRlbnRzIDI1IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMjUgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMzg1Cj4+CnN0cmVhbQpHYiFsXjloV0FoJjtLWkwnbSIxU1g/MldqQUc+I1VQdWNDTEJYNVpiTUhFYEYjMUpIWmhvdUQiJ0V1STYwTmdxKUFHLiU4M0JSaVUqPloqWExEIiJbaUkkWjkiRl5HZFBRQU9MUj8tMktsbW5KPDQpdFRVQ0xybmdTLXRyKGxkdWZjbCpHaHI2NyoxWjBJMnJpJilIbE5bX2taN1VNQzs7Im9NTVVdYVgzV29VKlVsLD10PTpDVzMkUyZXOlBGQzV1L21qcTklQkVzW2NUPltrV2QvZzdLZzFKWSU2OUlhKGFgZWAwOCtnSUlsNmpkcCE6RDxMLzc1cD9IJGhMRTRmNT0yN20kK3AnTDZqSitobzlAb01YKlQoa0xQXVJxUVhIZlthaUgjTFwyRUA8PVIuR2E4T3UtZyZdI1lvQlRcYmxkdSlNcXVbaVhHIWdVVUojJW9RKzMiMjVgYjBiK0o5ZEdKMHRbKTBmZmAialBlME05PkZeNC9vRWsmJC1vMX4+CmVuZHN0cmVhbQplbmRvYmoKMjYgMCBvYmoKPDwKL0NvbnRlbnRzIDI3IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMjcgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjM2Cj4+CnN0cmVhbQpHYXQlWjVtcjkwJjtCVE0vKUlPX1tbaFBIb3IsMGEnVUNfNm1SOUciXz5hSi5jLDoxYSYtS2hjSGMsUmlQVFQyYlYkL1dvQWtPNlVeNEQ1Imh1YXNXOj0uQHA+MXVAbEtNW2RmTVFIZ2tvcml0KFVUci9QZV02IkpuLUJyMyFQJWVqJUFGQydjKGNQTUA7TG5LcTIuVWE4PzRtS0MjUEI5I0Moc3FbLEx1SykyNi4oQVY1N3NJZ3U0J0wsdFBbOnMhK3RcPUNgUEtjSEwyYixVJC1IMDgjNzFcXW8iQ0hoUDZiVFU6NmlEQ21+PgplbmRzdHJlYW0KZW5kb2JqCjI4IDAgb2JqCjw8Ci9Db250ZW50cyAyOSAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCAzMCAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iagoyOSAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA4MDUKPj4Kc3RyZWFtCkdhdWE7OWxITGQmO0taTCdtISZwKz1zL0lSJjRhP1dKXUZFV04pMyspVEhBbmZRREJTWFNocio/akUyK2VEcTdxWkkoR09hODglLyIuKTNRcW9wVUBwRjA/ckFBQzt1Mm8jSkJKRmo0I2UkSkp0IjMub25oc2xHQkciQ1JcWW5LSkUxRkhFUSRWMmQtczFaLUBEY1g+ZEkwJlJjOERjUkJAXkRKcyJRSWROKDw4NzVkZDBndXFJOVxZQyxBcz5CamRdOSJqPEQtb0M8QyoqRFhHYzVOaGJXWVc9cE5zKkwhZD9UPXJYNFZqKkwiaVBqTFBlV0BNVFA9cUtEaEc0LydXTmQsVzsoOmE5TSgoRGhwYFMzKmA3Ty8mZldHVEUvaVknZzskSUtfTVpRZlojcVpRSiVpRS8iPS1QKU5KP29hcilCW1IwQik0P009WF1tSCJTPV5OLzxfNU0ydDVUaC1UNTlkVkBmJm1QMExzciE6Tz5raW47UGNCTzAhUThtISNvV21GZWJxNE4hJi9wK0hdJjRANFNIUWghY0dHMDQvVS5hRltcVSxSPj0+bVpSMEMwZ0B0VVczJCtZSnVBaWlPIyVnQHJoIksmOkY3dXEtaXJKXytZaWkhVUJOdVtWVWs5a2dYZV0sJGMobS5gbVtMZjtYSl1rXXFMUjZNa1VfdCk+OlE1Ri9VZmhAci9pME4/azc4NTs2WG1xQDg3MyZfKF4wUWdWW0VHPydIb2Q0VzVJMFFMV2UzVVUkMTtCbChvSVpaXnVDPCxeUj1FK1YtVV84X2RzOXI2Vy5Lb1BIcm0yRjhvcytoX0Q8JHU6MVYtTEQ7XEJXLCNeTkY7JCY2WHIjc2cmIXM7WUdgcllkOi0+ND1XMFdcKVVZJiQmQDA5WjBqW1JBT1NGSCVZR1dQImgvUDcoNDpOW2MnL1hDWHA7U01vam1vVlhnJydhUWpbcF89U3MiW2U+KmQ9aixSP1txZz9XNzgzc1s1OGlNOT1fImx1QmlWUzA7UEEuLz5iOWFiPEIxMyprVUouUVxXIkcpKDduMFNgdFpiT2k9LUgjfj4KZW5kc3RyZWFtCmVuZG9iagozMCAwIG9iago8PAovRjEgMzEgMCBSCi9GMiAzMiAwIFIKPj4KZW5kb2JqCjMxIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMQovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YyCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKMzMgMCBvYmoKPDwKL0NvbnRlbnRzIDM0IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMzQgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggNTAwCj4+CnN0cmVhbQpHYiIvYzlpJllcJSM0NkwnZz9MVDZMO1djX1whI0JMZUZHXj8uXnR0LUl1bE0nN1pYXUY8PjxtQFtARENDWGI3Wio5VkokcC1HcF5APDNISiFBNyMpXkhrLDpuZW9kbiYqNXJaUWU9NDUyTmktNkJaV1VRQ046IlxvP3NqW0wxYDBtMTRzRiFkKkAiPmhPVDNKKS82cCw4akxRJk5JXT0pbFhXMlxAKEkzIzVNZF8lPC9ZYUczNG5CQDNKLWgnP0QnaStdYSt0NkJVT0RdPHAncm89Iklwbj9LXDw+aDVgIzxqKz1bIVlqcF5VX09uYmAjY1JKTSQjI09TTT04a1FDLDghLUFnVDNaQWxYLzVgV2hxIUphcD1gbEZiI0UnNGEkbG0+b2tCNCppLGg/Y28rRlwoSV5NLFQ3Z2VeKT9tNSkqO0g/JjwoXEAqOGNhbGFjNCE6I1Q4STUmSF07VC4nXXJUcEFmdUxKOCZXNlxzUnJLbUpGPVJmXDNbZTZNZS4ycjFkY2pcJDdSQSMtRl5wbWFSUUo7L1BRWGVXdTUxMHVwaC5iZCIrYyonOlFxQG9TQEgrNFhpR01kIj5NWTgyMSNlUkhmbVs/dSMkL2ByUilNYEY6QjBoNShtanNbMUkqM2lcayZhQChOQTclMVs2VV5+PgplbmRzdHJlYW0KZW5kb2JqCjM1IDAgb2JqCjw8Ci9Db250ZW50cyAzNiAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjM2IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDI3MQo+PgpzdHJlYW0KR2IhbUswYV42JSRqUFknVm9ZZUgyK2M5KD5tNmQoS1xlc2omRGopUys3Kz8zSzZSQ1REa1MzKi1OKSZyPC9BU1pBTmBnV10yJSs1Tz05YzBNKysxZ1VqV2RKK1JiZiZkQDMlZmlaLCMyTi1GO0EzaUFpSWh0dUZQN1NXXWNPXHArRXAjKkI5L2ZlIV9PMmRYYk5WWzdJSTJfXVlvXTM3KDc4XWgsWGckNC9AJiJZbEYiWF1AalRgbjVHJCpuNF8ocT5sUThyYGJiWlRMLmM0JCIhO2NyMUBAQDlhbFFGVzVnUjdkbjE+W2dndFspK1NyKTQhOVdZZm5RNjErKmcmMzxBci1UXlcpTG8lV1V+PgplbmRzdHJlYW0KZW5kb2JqCjM3IDAgb2JqCjw8Ci9Db250ZW50cyAzOCAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjM4IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDI3MQo+PgpzdHJlYW0KR2IhbUswYV42JSRqUFknVm9ZZUgyK2M5KD5tNmQoS1xlc2omRGopUys3Kz8zSzZSQ1REa1MzKi1OKSZyPC9BU1pBTmBnV10yJSs1Tz05YzBNKysxZ1VqV2RKK1JiZiZkQDMlZmlaLCMyTi1GO0EzaUFpSWh0dUZQN1NXXWNPXHArRXAjKkI5L2ZlIV9PMmRYYk5WWzdJSTJfXVlvXTM3KDc4XWgsWGckNC9AJiJZbEYiWF1AalRgbjVHJCpuNF8ocT5sUThyYGJiWlRMLmM0JCIhO2NyMUBAQDlhbFFGVzVnUjdkbjE+W2dndFspK1NyKTQhOVdZZm5RNjErKmcmMzxBci1UXlcpTG8lV1V+PgplbmRzdHJlYW0KZW5kb2JqCjM5IDAgb2JqCjw8Ci9Db250ZW50cyA0MCAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjQwIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDI0NQo+PgpzdHJlYW0KR2IhbUYwYVt0OiYtXkVFVnRkKWxgNjthSV00aEdOQ2tVUy86XzooXnFcTmpHWW4uRWdyIVhpPk9yOGA/IktAXz1xZnI2ZCVHUU0jJ15ZdCxCUDlwJj5JWG9gXk4+SEFbMGQrNkVISVFIWT9zZHFcWjRaZEhzQiYtLkEmP0M0JjJzc0JxRCRBS043ckZbNzdkJUQ8QktLP0dFNElWaTw9TylWckdyMlMnaUVGSkVFbUtwSzhJQnBnSkhiP1FjKmspLlNCQjllY0MpZWJXcVVMaGA4UThxVUZiaU9EQVxRaWc5Yj1dcl86KXFKJDQ5NjpzXj0zfj4KZW5kc3RyZWFtCmVuZG9iago0MSAwIG9iago8PAovQ29udGVudHMgNDIgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iago0MiAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA1ODQKPj4Kc3RyZWFtCkdiIi9jOk4rXUkmQjQsOydRXChOLzJPWDRdR3M0ZjVbNEBTcD5XVFo5dTFWYTovcSlXPVpeTDY7Q21yJ0tmImRTQTxXUjRISSI4PyZSYDFgSSciPDtbZnNHRDVYNWFzRzlFWGgnT1RkSE9mXkYuLTY0VFEzIlU9cS5YLXAkXFs3QFZHJ0IsciJrbm0zaiVVLnMrUFs4NUVZa0Etb3I5SyMyL0kvR2tqLDcuZjxGLF9yRlhTTEdcRlFfRnU+TWheVFk3TF1SZi9IMWhIRGs9SSlkK0Q7VzVcTmI9XkcwNklUPyo+R1tdUERhTidON3FNSytXS3BqYm5xSXJtW1dnclRPPyoscD9vQlZsWmJyNlwnOzVIaFRWRTY3azExPl5oOjoua0lYcVxnPHMlPWpqaUlvWDUjMmwmVGIyITMrSk5aLVpfY15MM282cTldQ11va09jRVYnWV0lP1BkYlYoYFVrPCVvVStvcGstM1ZvSV9yUjYjYGozIk8wQShxcUlqYkFFXFpaXVNFKzh1UFtmMUExNnNTKTQ9TlhFWUkpVTJvPSVUMVpuXj1YIVdSbGciVylwa0lpZmZKKyc8MHVUYXA9akZvJFJAJVNjVVloRXApTFVdLiUvbHUtQVVoJCNBZ0g6IlJba2YvTD5jNlA5WSU6ViYpXWlgS10sOFA/ZGBGQCxlPU5oWDkoM0BLUWBMTEFBUW5wLStGI2srcTNHbGBFOjJALCVkalB1UVM7WT8rNDBiL18vSmBEJDEsJnNkRF9SdS0hPH4+CmVuZHN0cmVhbQplbmRvYmoKNDMgMCBvYmoKPDwKL0NvbnRlbnRzIDQ0IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNDQgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjcxCj4+CnN0cmVhbQpHYiFtSzBhXjYlJGpQWSdWb1llSDIrYzkoPm02ZChLXGVzaiZEailTKzcrPzNLNlJDVERrUzMqLU4pJnI8L0FTWkFOYGdXXTIlKzVPPTljME0rKzFnVWpXZEorUmJmJmRAMyVmaVosIzJOLUY7QTNpQWlJaHR1RlA3U1ddY09ccCtFcCMqQjkvZmUhX08yZFhiTlZbN0lJMl9dWW9dMzcoNzhdaCxYZyQ0L0AmIllsRiJYXUBqVGBuNUckKm40XyhxPmxROHJgYmJaVEwuYzQkIiE7Y3IxQEBAOWFsUUZXNWdSN2RuMT5bZ2d0WykrU3IpNCE5V1lmblE2MSsqZyYzPEFyLVReVylMbyVXVX4+CmVuZHN0cmVhbQplbmRvYmoKNDUgMCBvYmoKPDwKL0NvbnRlbnRzIDQ2IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNDYgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjcxCj4+CnN0cmVhbQpHYiFtSzBhXjYlJGpQWSdWb1llSDIrYzkoPm02ZChLXGVzaiZEailTKzcrPzNLNlJDVERrUzMqLU4pJnI8L0FTWkFOYGdXXTIlKzVPPTljME0rKzFnVWpXZEorUmJmJmRAMyVmaVosIzJOLUY7QTNpQWlJaHR1RlA3U1ddY09ccCtFcCMqQjkvZmUhX08yZFhiTlZbN0lJMl9dWW9dMzcoNzhdaCxYZyQ0L0AmIllsRiJYXUBqVGBuNUckKm40XyhxPmxROHJgYmJaVEwuYzQkIiE7Y3IxQEBAOWFsUUZXNWdSN2RuMT5bZ2d0WykrU3IpNCE5V1lmblE2MSsqZyYzPEFyLVReVylMbyVXVX4+CmVuZHN0cmVhbQplbmRvYmoKNDcgMCBvYmoKPDwKL0NvbnRlbnRzIDQ4IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNDggMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggNDM3Cj4+CnN0cmVhbQpHYiFsWzlodGdGJjtLWk4vKjg2JEMxZlJoZ0UmSSIhTWNDKWROXVE7YDJKJk9fImRYVV03XmBJOzheQGBbYE51L2dcOHJLTEJrWW1MIjYtQSMmaz05VTRbdCFFPD00OSthMFAiWmhGbTs0LCZVciQ0KT5maiRiWW05Pj9IZyhQcSM9XFU7XCMtTFBWJi0ta2NjXUJQdWdpUVY0cFdyX2AqaXFXZSpPT2MuLi1ZaCVrWyVgS1FDPS5hY1U5ZSVKJCopTlwqbjRwVyhVXV5UPWZwaCw7UURlZkMsTyVjPjBTZSZlSnNjVmMqOjlMM0VOMDBTQktHdGNCMjtUM05IMiVqT0oiKkVqXz5cVmNJbSJYP2tYOChISGw/OXQtT20yTzt0Sl1SI3RIOS8sMy1UMEIsK3ImLCUxMDxQZEZTRC80J1psTCs6QGlMdVhgSGpZI2FeUFIvTy9MUClBTUZEcFFRVzhVXVIzcUMpU19xMkNMZ00tayFVKnJdR0w7WVJiM1BDL3ApQ2MlLDduL2RzSFVHTkgzby1tdE8mWlRYUTotcFJELClSOURgcUQyJTxhSy4iP1x+PgplbmRzdHJlYW0KZW5kb2JqCjQ5IDAgb2JqCjw8Ci9Db250ZW50cyA1MCAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjUwIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDE3NAo+PgpzdHJlYW0KR2FyVzJZbVM/NSY0SEVvTUNEUXBdSyVZLj8oIXNiMFNrO1kiJT5MSCZjXVViTj1sZTVAJTJHWj5KYVQoaDksZFRNVHFgI0pEUyoqLC4nXzwxKChkLCQ4LlQ/THMiMThjWF0tJXJyRmtDQW1jPDtlXihqcEshVFMtKlIjP2NJWi8xZTk2TzxxZDxgSzhkPCwnR0xpW3VYUWQ+dFpMJVIqLXM3SS9LJGBlWShnJn4+CmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDUxCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDU0IDAwMDAwIG4gCjAwMDAwMDAyMjYgMDAwMDAgbiAKMDAwMDAwMDI3NSAwMDAwMCBuIAowMDAwMDAwNDc0IDAwMDAwIG4gCjAwMDAwMDI1OTcgMDAwMDAgbiAKMDAwMDAwMjY0OCAwMDAwMCBuIAowMDAwMDAyNzU1IDAwMDAwIG4gCjAwMDAwMDI4NjcgMDAwMDAgbiAKMDAwMDAwMjk4MiAwMDAwMCBuIAowMDAwMDAzMTg0IDAwMDAwIG4gCjAwMDAwMDM3ODEgMDAwMDAgbiAKMDAwMDAwMzgyNSAwMDAwMCBuIAowMDAwMDAzOTMzIDAwMDAwIG4gCjAwMDAwMDQwNDYgMDAwMDAgbiAKMDAwMDAwNDI0NyAwMDAwMCBuIAowMDAwMDA0ODIwIDAwMDAwIG4gCjAwMDAwMDUwMjEgMDAwMDAgbiAKMDAwMDAwNTQ4OSAwMDAwMCBuIAowMDAwMDA1NjkxIDAwMDAwIG4gCjAwMDAwMDYyOTkgMDAwMDAgbiAKMDAwMDAwNjM0MyAwMDAwMCBuIAowMDAwMDA2NDUxIDAwMDAwIG4gCjAwMDAwMDY1NjQgMDAwMDAgbiAKMDAwMDAwNjc2NSAwMDAwMCBuIAowMDAwMDA3MjQyIDAwMDAwIG4gCjAwMDAwMDc0NDMgMDAwMDAgbiAKMDAwMDAwNzc3MSAwMDAwMCBuIAowMDAwMDA3OTczIDAwMDAwIG4gCjAwMDAwMDg4NzAgMDAwMDAgbiAKMDAwMDAwODkxNCAwMDAwMCBuIAowMDAwMDA5MDIyIDAwMDAwIG4gCjAwMDAwMDkxMzUgMDAwMDAgbiAKMDAwMDAwOTMzNiAwMDAwMCBuIAowMDAwMDA5OTI4IDAwMDAwIG4gCjAwMDAwMTAxMjkgMDAwMDAgbiAKMDAwMDAxMDQ5MiAwMDAwMCBuIAowMDAwMDEwNjkzIDAwMDAwIG4gCjAwMDAwMTEwNTYgMDAwMDAgbiAKMDAwMDAxMTI1NyAwMDAwMCBuIAowMDAwMDExNTk0IDAwMDAwIG4gCjAwMDAwMTE3OTUgMDAwMDAgbiAKMDAwMDAxMjQ3MSAwMDAwMCBuIAowMDAwMDEyNjcyIDAwMDAwIG4gCjAwMDAwMTMwMzUgMDAwMDAgbiAKMDAwMDAxMzIzNiAwMDAwMCBuIAowMDAwMDEzNTk5IDAwMDAwIG4gCjAwMDAwMTM4MDAgMDAwMDAgbiAKMDAwMDAxNDMyOSAwMDAwMCBuIAowMDAwMDE0NTMwIDAwMDAwIG4gCnRyYWlsZXIKPDwKL1NpemUgNTEKL1Jvb3QgMyAwIFIKL0luZm8gMSAwIFIKPj4Kc3RhcnR4cmVmCjE0Nzk2CiUlRU9GCg==" download="Paper3B_Predicted_Exam_A.pdf" target="_blank" onclick="return openOrDownload(event, this)">Download Paper A (PDF)</a>
+    </div>
+    <div class="paper-card">
+      <div class="ptag">Predicted Paper B</div>
+      <h3>Set B</h3>
+      <div class="pmeta">2 hours &middot; 84 marks &middot; 4 questions answered</div>
+      <div class="ptopics">
+        <div class="ptopic-row"><span>1(a)/(b)</span><span>African Union &amp; ASEAN &nbsp;/&nbsp; Semi-Democratic vs Authoritarian</span></div>
+        <div class="ptopic-row"><span>Q2</span><span>Realism vs Liberalism on International Law</span></div>
+        <div class="ptopic-row"><span>3(a)</span><span>Globalisation, IMF &amp; World Bank vs Poverty</span></div>
+        <div class="ptopic-row"><span>3(b)</span><span>China's Rise &amp; World Order</span></div>
+        <div class="ptopic-row"><span>3(c)</span><span>The EU: Economic vs Political Actor</span></div>
+      </div>
+      <a class="dl" href="data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovUHJvZHVjZXIgKHB5cGRmKQo+PgplbmRvYmoKMiAwIG9iago8PAovVHlwZSAvUGFnZXMKL0NvdW50IDE3Ci9LaWRzIFsgNCAwIFIgMTAgMCBSIDE1IDAgUiAxNyAwIFIgMTkgMCBSIDI0IDAgUiAyNiAwIFIgMjggMCBSIDMzIDAgUiAzNSAwIFIgMzcgMCBSIDM5IDAgUiA0MSAwIFIgNDMgMCBSIDQ1IDAgUiA0NyAwIFIgNDkgMCBSIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDIgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9Db250ZW50cyA1IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNSAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCAyMDMwCj4+CnN0cmVhbQpHYXUwRT4/QlE9JjpWcy9SKWRRQD8wZ0tTaGdqLkhtVi1tVUEwOk44XUk6M1Q+XlFqZDlaay0tT21HJ0lNODxvaiE+OE5SQ1ZDXDI8PWxEKUxSP0NBIlpXLWpMWC0pL0wiUihFW2xEVUdfPCNNKDBIZ24lOS5gKXEhPExNZC9WYUhNXixOU2Q4QUpxNG4xXyxsRWNGJCgoOFUmTHFrbDtBXUI2J2Y5czUwWThkWEhLTEEuP0EnJylpTmBnS1lDU2o9V2VMbSZHZTE8REtNXF1iRixhSFM3OGxqZldYV2Rtb1Y7JmZsZytqUCRlMih0UTpsaihia0JrYV5UISZKJ3JUOS1jVFsyYSZhWShtcWNJQ18oLzdnLUUkMShOKVc9PCtII01jUShKLlBkLi9TZiIiTUxzN0pDVyFmK1NnaTEvY0Y5ZE9dSk9ORFhoblxqcCpfP0FOOUtBJmQzUE5KIm1DZUk1VVY4OyE/MS5dRENAS1U/a2w3ZzZLZSxdbEt0JVNpKFkvJ3FHaFNwPSU4czZyIUQlXyFoaUVOZGMnTzpLM08ib15wamF0dWxTOFghZkc4JE5oOUA2YkNQXz9GV3I2YmZtU2U+bkw6NEl0YmMwS01tODE2NG9sYFZ0WCc0dSMqVlZOa2EvS2ZVQyJlPWAmVGAzIStBTD9MNDxxRVlubV41QGNxLyg0KG1lTEk+KFRnTiheMmBEOVVpTzs3OFtNIlxyPl5yOmFZWys1Mm1yQjAsS3RZN2kuTTxlcSliYj46M3NucmJxaUdFQVtrLlc9STNYZ2tiN1hvJGMzS2cjWFRrM2tNdTlKVEkyV2xHNklENjU+N2dEUFw4JmNGLD1tVHEiOGohT1c0MEwoQjs3PkNxV2UoImUoVUY2SitLKl0icGlEZlAmVWxOIzg+SStMZHRIJmlMIlhpa3FLai8qNCFPPzoyPjdBXmE3SG9kMGFxJTUkVjBJO3RUUDxnM2NTKDtRUyFTcU5uV1NwWihoc11mOVg7YVtdPj5HWDtQX0k+dUlbJzdTbyxKLzJjIVsoOyZdOVlKaCtXSSVEdFhFWklVTVZxSkMtTjknS0AidU5GJlpYQyxdcVttSSU5LkJYUEhQXiJmPT1oZzxeMyo+YGNKQSY0ZlczNlouRU5xQ1VaTTooOFkzVSUoYzkjZ0k5QypEVmRlJEo3OGk6MDhdR2g+Y0hhJjJoUF1VNCwjTWBiOichZk5DOCQhWkFxRG5HS2JhVlEuUG5Ja0dEPV5MJVEjPVkuQG86MS5aXyw3JDxpQGVuQmdbPi5qckBiPnNhcyJxQ0E1WWw+WjchXmY8SXFPcigzMVRKOlUsJ05QOkcicCovWiNDJnUibGpLWnR0Vj0hMDJdaTdoSlBWcyZoS1hIXFtGNiFaL1FAI2czTzZIPjxRb0p0aTRZIyskNTc8KmZKZm45K1MsWVI6cjI8LVNoZiNiRm1uKXJvI1khWzJCUypnXXJUU2swZz5cRSFmRzFkcUdIJiRpdW1tNl4xYmRLWGtnSWliUSFcQVcqIk5NUCFmO3FxPygkXFxHTjU2MD4iVisicytXcTNaUDphVTpzNV5TO0RDcChxVDYnIjsjL0NxRUlKbydVTV0ob1Q6RFxpbm4haEdkOi9lT2RIY1FSWyhKYGhqby9LW1FRSiZNKG1QK09gZ0xCUm5yPlswayFdMDVwLDYtPlxwMEgwN1I3M0NFK15hNF8vbiRAIixdJHF0V3IiRikmdEQ5amZCJkRMSyRoISQ6LVZjVE5ZMGVkRGdYWickbnAkM05rWF5sPENqWUpEQ0tAKjFENkAqT0IvM3BMTjgjRm9zXCV0cGo1KGI8M2U+YkhsTzpfPGlsVmc3NnQ4byhjMCNQSmFrRjRDRGwmSCNlLGI4ZUQzS0BoJmxxWFQ4TkhkaEo7cmQubkkzcVR1YnBvYjFSak5vUiYwJi5mZ1hrTSU1MmoyaD8nKlVqS01rTEo3dT03PzFnMFc7ZmclJFlLJWNONUdENChgc3I/KiVuKyRbM1JkQW0jWCtrVUtpXlJAUnFwPGEjRnU5K1llPlpgVlhDX1VYY04rTy9MdEQoQU9eWkwoI1FNLVNqYCJdJVMhcDNKdW8ya1BmR29UTyx0WCoxT3MuXDwzTCxbXy46QkAyc1VDJkEyLzVgIjksUVNKOCtGNWQ5IT5PIzdeMlRQcWg2bXAjPCEiYHNcU2k3PF1XIipsUUZNL1k/OUNhTFRxWCpnK0Y+QChecEhuWCQrKU05ZW89R1U8Q2kyVyRMXGNyKU0/JW5sR0xGVT1zRyhVWTw5NCpCaVhlJHJHQXIkSDdDWTtsb2BvcyMqKCpXQVo3Ul51YEUxQ29YSFBGNkFyOWNQc0pWQlohM3NeQj86LnQoN3AyTTxHb05ZQnVRPS5JNi0tPVgwKDBPLmA7TWRfU3JBSU03PFsxUjlJLkc5cjA/aTddV04nXFUoaF0wPmkoQEI9QlQvVDVhTnRAODVdalAqPyNUTUxTb0Q6ZkdhTVVXVGBIT2ZzNSVQXCo2WTxVSlV0IltnR1RXYSckWE5fRVgjTzAwOi1bN0Qmb0pZKTkhYVdDLGZ0clZzOz5ZVEFFMERrO3FANyRKaWo5RC42QDxNNic/RiQkUy8qaV82ZF5FNlhxRXBISmVZM1djW1pAM0hgUTtQM1pvLmI4bSUpKE5zcVZuVSNVbmlyMVtmaVx+PgplbmRzdHJlYW0KZW5kb2JqCjYgMCBvYmoKPDwKL0YxIDcgMCBSCi9GMiA4IDAgUgovRjMgOSAwIFIKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YxCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKOCAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMgovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjMKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iagoxMCAwIG9iago8PAovQ29udGVudHMgMTEgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgMTIgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMTEgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggNDUxCj4+CnN0cmVhbQpHYXQlXV8vRm9aKHJidEMoJTgob2YkT3NVKjgvMWFQPTc3b0RJK2ZZZmdSJDkpWWBFdWkiVD1ZQUtnJSVePVcsUHJDWiYkTzEsJ0YjOUYkOVNnWiI+YT9YJWo2RytFVlVLMiQjWys0VU9sWkR0Ol8wZiE7MzJhXCZfPmtlI0dTKi90QmVpJTRKYlhjKjNAMyhoLFlDR2BKVTdrNU5fKilGbW8+J1AoPzlKNkM4OHJSPV1PVT9WckJfLmo3T2hLal1GLF84R15iTDM/YzArMFxqWlw5YzwoK0lfPE8rZSxQa2knXG0tODNHLVk7blBgbF5APTtjbWosMlVOJDJhL2M5Qk5mXjBINV5Ma0JcWC9ENyQ9SjtKKiszZDEzMHNYISE+LkZoQU1PZSM9bHJLZWRHITstI09VaD9vMi1ubTVQPyVzWVJqTSZPVHQoMykvVVFidHJKJkVZYkNdTjpRLUNUWj1yblFpblZPQ1VPQ2Ukajc+KDsoUV9mbE5lNz5qRXE+USpRQjFSJ2sqMG05OFVfPiJQSmZlNCg/PERAam1bZnAlZjlqWSRpbTNhb01iRTtDKT0/S19sLF9XVnBBK241T34+CmVuZHN0cmVhbQplbmRvYmoKMTIgMCBvYmoKPDwKL0YxIDEzIDAgUgovRjIgMTQgMCBSCj4+CmVuZG9iagoxMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjEKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iagoxNCAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMgovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjE1IDAgb2JqCjw8Ci9Db250ZW50cyAxNiAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjE2IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDQ4MQo+PgpzdHJlYW0KR2IiL2NiPixyLyY0UT9oTUhOZ21gXFs9SUEhUzYmNj5RXitHIWYsUDw0I1kwLlhpSGVVaHJZWjZvUEJjODxnJG0yZzlZRUs0Ki9ncCVgIydFKXNpdCxtIl5ETys/KTMtdVwlPGJTRCdTUSYnK0pqOiI+VWFbSW8uOT5lMVo/OVZwPiJePE0oaEwjQFxUN0wyY2wlQEcxNVQ+Oi5ec1Z1TEhvN00zQFFlJjJeISgrQz4+SWNMamxsY2YkJ2BLXCNFI210OU0uJ1NSPVBpa2s3Ml07Q2kmKSJrXkdNVEZkOTpRXzpmbV1HayE/RDgqM3RaV2pQSigpWSRHcDNaWERSaVYiYFdKYC9iXVYyJmAjWVVMV1xtVl1LbVlBZFBaZyVNQkNvJUo4Zj5CUEBXN0ZRMiZsJ2lxOitvOy1rN2ZRb2hMKkMuUjtGQ2Y3IyxCLDpzNmc9OERANzVKJmFObTVaWzspOksyIkl0LSlBazNiVEdQYnMsQz1NMko/cjVFaTY/Z05iVmRCWEw8N05NYEspNUBaRWwvazFIWlAqMj9dXXE1PidNP0lXSDBIYVQ3NFcic0csV2w6SjlDLCtuYT4wSyEpTWBIWjAwaDRNXWsocVBzTl5zRTsrU3UtRSZGZEZ+PgplbmRzdHJlYW0KZW5kb2JqCjE3IDAgb2JqCjw8Ci9Db250ZW50cyAxOCAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjE4IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDM3Ngo+PgpzdHJlYW0KR2IhbF5jVikvMCdaXVxALylHOjsmRys/MjIqI29bWkFDVW9DTko5QkxfRm86WigoT1dTLFQoPmleISNYXUVGW1ZeM21cQ2hWZWkuT0M7VnFJNFBDTzRlMGgxOmtATChDOCZIc0AtNDZZI2xANGxKdC1pZSN0XFFeMFxkJk4iaixDRyJsbSI+TmUvU2YyQWQuT2M5aksyV2NhXGJJbCslXD9icj9sZlpQdGA2XVsnVTNcJTtyQTFfIy1kVlI7Z2dSJzNyKWZzJChOQidAQkEnU2JyMGtWM1RSKyUoNGJpc2R0YmlxTSZfdVciVW4vNyskLE08anBmP3BiV1BiPywpQ1Jrb2kvSktTb04nPEVqNylqWkBnU1hoVUBGcXM8YCloYGUoLGYvJWJFJlMiaU1HN15ucilXQjxqKGJ0ckcpMDIpQyNDcHAqZm80J0MtbVJocEQvQlZbSmwpMz5BZU1KITMjXGc3ZDwicS0+XVZKYG1KPFZvXWt+PgplbmRzdHJlYW0KZW5kb2JqCjE5IDAgb2JqCjw8Ci9Db250ZW50cyAyMCAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCAyMSAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iagoyMCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA1MDAKPj4Kc3RyZWFtCkdiITxKNiM1NzAmO0JUSyglN09eVExyX0laQiVSSytdKT83SUVZLk1OYSE3Iz5WJ2ZaclYnO2NoKSg1PFxSVTcoVU5wZTcoZDglLT9GLCo5NGBKbTFyQzZyV2tYUUpqL0dgL1BtNFskT18zaFc6Lj0vLmQ1OE1hLmprdVkrRmthPWZwVUwtRXFrOmUlbmVqQWZrXlQ9VnBYZE8ibTo3LzlfOjtfc1MndU4mOCJUOEReai01YiFpX05QUyRYdGpBPGJoam9RbSJTPGNwJldZRVAkRmJaSzxKRyR1QTlqdHElcyIjITEsS1VJNXNIJUFhUWA6MVJLTypEKFxiYT9DTTFmJzdjZ0RtciowU1tDW0lDVkhePCZgLmA2WCJfMHJiOG9QKjwjRU9KaS43MlFJJ2FSQUE+bDlGRld0cF5tLSdWKiVBUkRoXitlaV9kJ0xNczBTPCQ1RXNFOStWMD91OURxaHVOVnIiaEptayljXlNWajZaOzxzQVotUidXMj1yYElDPVIwYmU6NzssUS80P0xlKDVVMzo+YEZBZHAiPV80XDtPJUcqOGk0Oiw5Ni44dUMxJkE4ODY0OVBybDo7ZDdlOFdOQV1IWz9bJU8vW15iQFYtNVhePChXc1FadCpvRy8iJ1NpOD42azleQiJ1bEdQTX4+CmVuZHN0cmVhbQplbmRvYmoKMjEgMCBvYmoKPDwKL0YxIDIyIDAgUgovRjIgMjMgMCBSCj4+CmVuZG9iagoyMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjEKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iagoyMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9OYW1lIC9GMgovU3VidHlwZSAvVHlwZTEKL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjI0IDAgb2JqCjw8Ci9Db250ZW50cyAyNSAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjI1IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDM4NQo+PgpzdHJlYW0KR2IhbF45aFdBaCY7S1pMJ20iMVNYPzJXakFHPiNVUHVjQ0xCWDVaYk1IRWBGIzFKSFpob3VEIidFdUk2ME5ncSlBRy4lODNCUmlVKj5aKlhMRCIiW2lJJFo5IkZeR2RQUUFPTFI/LTJLbG1uSjw0KXRUVUNMcm5nUy10cihsZHVmY2wqR2hyNjcqMVowSTJyaSYpSGxOW19rWjdVTUM7OyJvTU1VXWFYM1dvVSpVbCw9dD06Q1czJFMmVzpQRkM1dS9tanE5JUJFc1tjVD5ba1dkL2c3S2cxSlklNjlJYShhYGVgMDgrZ0lJbDZqZHAhOkQ8TC83NXA/SCRoTEU0ZjU9MjdtJCtwJ0w2akoraG85QG9NWCpUKGtMUF1ScVFYSGZbYWlII0xcMkVAPD1SLkdhOE91LWcmXSNZb0JUXGJsZHUpTXF1W2lYRyFnVVVKIyVvUSszIjI1YGIwYitKOWRHSjB0WykwZmZgImpQZTBNOT5GXjQvb0VrJiQtbzF+PgplbmRzdHJlYW0KZW5kb2JqCjI2IDAgb2JqCjw8Ci9Db250ZW50cyAyNyAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjI3IDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDIzNgo+PgpzdHJlYW0KR2F0JVo1bXI5MCY7QlRNLylJT19bW2hQSG9yLDBhJ1VDXzZtUjlHIl8+YUouYyw6MWEmLUtoY0hjLFJpUFRUMmJWJC9Xb0FrTzZVXjRENSJodWFzVzo9LkBwPjF1QGxLTVtkZk1RSGdrb3JpdChVVHIvUGVdNiJKbi1CcjMhUCVlaiVBRkMnYyhjUE1AO0xuS3EyLlVhOD80bUtDI1BCOSNDKHNxWyxMdUspMjYuKEFWNTdzSWd1NCdMLHRQWzpzISt0XD1DYFBLY0hMMmIsVSQtSDA4IzcxXF1vIkNIaFA2YlRVOjZpRENtfj4KZW5kc3RyZWFtCmVuZG9iagoyOCAwIG9iago8PAovQ29udGVudHMgMjkgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgMzAgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMjkgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggODM2Cj4+CnN0cmVhbQpHYXVgUDlsSmM/JSkpQzpuQ1swZXFWMVBGbUYhVCVmJ0w6QTBkJTpPQWVNNVNlNEZcNHI7MEI4JmdwdCVYTSM7UCUlRW4yYW5NQ2pKUDInVV1ebEtnM2VQVVslbTFyPiJhSF5TNk06VCZmaV0hX189Tys/aTpwVTVnSGtVU2lac1UyU2VJKzMmUylXSHJ1QnAsUE5hK0M+WDd1Zlo0QDBjRFwrP20rYzBIOlsibDEpSEBsUjFxXk1IRjsmXy1BTDR0ZCpOJG08QW5JUEUvTWFCKlpCPHF1NVNxY0QtTEBYI09GNSMtO0dpRlopJCk0VSM3KTJqUyQ8WiRlST1ra0pcaCdMYCVnXV1bIXFXayIzTFVETyEvMmAlUjR1RGoxKEE3KU8wW2kkazhMXywkXWAzTGBWaEo5NjUnPDNwaCVmSVY0PWspXj9uMVVrQm1haSdEaiVLUzsnZUUjQW5hNVNMVVcjYGNwMyQ3ZSNzU1QnT2tpUEtaTFxTbnAnJmRhUlJRUlsjYGQjXEpkcGsuJSlxQWNSWyM9bipKdCUyVzlVN2B1T28+PWE8QThPWixwOy4lZzVtXXAuT0MrImskWTJaM11VRz8lWDdmWD4wUSJbc2lFQSM8ZlZKYXI3RmhScFdCLGQ9Zl1kNiNbRSVfcURpTDVVWSpeOnNVLHNSMitJcF9WJik1c1JDWi1MYjArQTgrO2ZCb0xQZF9gPjJmPlk8PVdfOzdPKHNsZWVqQjAzUEQwc0Rwajw2YDUrYywnXCctX0NmLytJIS9NOSVkYVx1dEhiPzs9akFUJTRWZy9WZyo1ay80Pl1hbU8vJnJEUXNyXWpgb04vbSlWPjc0ZWpJVGVOUSFbdWNmVDk1SmwiOG8nLW9bWVVaZi5uUGhsN1U8IXA4PUM0Umk0SC1SVWldIm8sQ1VIKixCKShLTkFpQC5WRXI4PGdRYDZecFVIVz09UXUlOSFOIWlFUClpLyNvVSI0ZnJPSDRDYy8kRlpfUUk9QU9oc2ZhQylmXTVdRFxzNj1EanBMMmg0JypocSw0Oi4nLC8sJ3JNTWdBbDM5czlrdDVVZkZpclomWCJCb0dCJCNBTnBxQjkhRz4yJT83PE1+PgplbmRzdHJlYW0KZW5kb2JqCjMwIDAgb2JqCjw8Ci9GMSAzMSAwIFIKL0YyIDMyIDAgUgo+PgplbmRvYmoKMzEgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL05hbWUgL0YxCi9TdWJ0eXBlIC9UeXBlMQovVHlwZSAvRm9udAo+PgplbmRvYmoKMzIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZAovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovTmFtZSAvRjIKL1N1YnR5cGUgL1R5cGUxCi9UeXBlIC9Gb250Cj4+CmVuZG9iagozMyAwIG9iago8PAovQ29udGVudHMgMzQgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iagozNCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA1MDAKPj4Kc3RyZWFtCkdiIi9jOWkmWVwlIzQ2TCdnP0xUNkw7V2NfXCEjQkxlRkdePy5edHQtSXVsTSc3WlhdRjw+PG1AW0BEQ0NYYjdaKjlWSiRwLUdwXkA8M0hKIUE3IyleSGssOm5lb2RuJio1clpRZT00NTJOaS02QlpXVVFDTjoiXG8/c2pbTDFgMG0xNHNGIWQqQCI+aE9UM0opLzZwLDhqTFEmTkldPSlsWFcyXEAoSTMjNU1kXyU8L1lhRzM0bkJAM0otaCc/RCdpK11hK3Q2QlVPRF08cCdybz0iSXBuP0tcPD5oNWAjPGorPVshWWpwXlVfT25iYCNjUkpNJCMjT1NNPThrUUMsOCEtQWdUM1pBbFgvNWBXaHEhSmFwPWBsRmIjRSc0YSRsbT5va0I0KmksaD9jbytGXChJXk0sVDdnZV4pP201KSo7SD8mPChcQCo4Y2FsYWM0ITojVDhJNSZIXTtULiddclRwQWZ1TEo4Jlc2XHNSckttSkY9UmZcM1tlNk1lLjJyMWRjalwkN1JBIy1GXnBtYVJRSjsvUFFYZVd1NTEwdXBoLmJkIitjKic6UXFAb1NASCs0WGlHTWQiPk1ZODIxI2VSSGZtWz91IyQvYHJSKU1gRjpCMGg1KG1qc1sxSSozaVxrJmFAKE5BNyUxWzZVXn4+CmVuZHN0cmVhbQplbmRvYmoKMzUgMCBvYmoKPDwKL0NvbnRlbnRzIDM2IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMzYgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjcxCj4+CnN0cmVhbQpHYiFtSzBhXjYlJGpQWSdWb1llSDIrYzkoPm02ZChLXGVzaiZEailTKzcrPzNLNlJDVERrUzMqLU4pJnI8L0FTWkFOYGdXXTIlKzVPPTljME0rKzFnVWpXZEorUmJmJmRAMyVmaVosIzJOLUY7QTNpQWlJaHR1RlA3U1ddY09ccCtFcCMqQjkvZmUhX08yZFhiTlZbN0lJMl9dWW9dMzcoNzhdaCxYZyQ0L0AmIllsRiJYXUBqVGBuNUckKm40XyhxPmxROHJgYmJaVEwuYzQkIiE7Y3IxQEBAOWFsUUZXNWdSN2RuMT5bZ2d0WykrU3IpNCE5V1lmblE2MSsqZyYzPEFyLVReVylMbyVXVX4+CmVuZHN0cmVhbQplbmRvYmoKMzcgMCBvYmoKPDwKL0NvbnRlbnRzIDM4IDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKMzggMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjcxCj4+CnN0cmVhbQpHYiFtSzBhXjYlJGpQWSdWb1llSDIrYzkoPm02ZChLXGVzaiZEailTKzcrPzNLNlJDVERrUzMqLU4pJnI8L0FTWkFOYGdXXTIlKzVPPTljME0rKzFnVWpXZEorUmJmJmRAMyVmaVosIzJOLUY7QTNpQWlJaHR1RlA3U1ddY09ccCtFcCMqQjkvZmUhX08yZFhiTlZbN0lJMl9dWW9dMzcoNzhdaCxYZyQ0L0AmIllsRiJYXUBqVGBuNUckKm40XyhxPmxROHJgYmJaVEwuYzQkIiE7Y3IxQEBAOWFsUUZXNWdSN2RuMT5bZ2d0WykrU3IpNCE5V1lmblE2MSsqZyYzPEFyLVReVylMbyVXVX4+CmVuZHN0cmVhbQplbmRvYmoKMzkgMCBvYmoKPDwKL0NvbnRlbnRzIDQwIDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNDAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMjQ1Cj4+CnN0cmVhbQpHYiFtRjBhW3Q6Ji1eRUVWdGQpbGA2O2FJXTRoR05Da1VTLzpfOihecVxOakdZbi5FZ3IhWGk+T3I4YD8iS0BfPXFmcjZkJUdRTSMnXll0LEJQOXAmPklYb2BeTj5IQVswZCs2RUhJUUhZP3NkcVxaNFpkSHNCJi0uQSY/QzQmMnNzQnFEJEFLTjdyRls3N2QlRDxCS0s/R0U0SVZpPD1PKVZyR3IyUydpRUZKRUVtS3BLOElCcGdKSGI/UWMqaykuU0JCOWVjQyllYldxVUxoYDhROHFVRmJpT0RBXFFpZzliPV1yXzopcUokNDk2OnNePTN+PgplbmRzdHJlYW0KZW5kb2JqCjQxIDAgb2JqCjw8Ci9Db250ZW50cyA0MiAwIFIKL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0KL1Jlc291cmNlcyA8PAovRm9udCA2IDAgUgovUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PgovUm90YXRlIDAKL1RyYW5zIDw8Cj4+Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKPj4KZW5kb2JqCjQyIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXQovTGVuZ3RoIDU4NAo+PgpzdHJlYW0KR2IiL2M6TitdSSZCNCw7J1FcKE4vMk9YNF1HczRmNVs0QFNwPldUWjl1MVZhOi9xKVc9Wl5MNjtDbXInS2YiZFNBPFdSNEhJIjg/JlJgMWBJJyI8O1tmc0dENVg1YXNHOUVYaCdPVGRIT2ZeRi4tNjRUUTMiVT1xLlgtcCRcWzdAVkcnQixyImtubTNqJVUucytQWzg1RVlrQS1vcjlLIzIvSS9Ha2osNy5mPEYsX3JGWFNMR1xGUV9GdT5NaF5UWTdMXVJmL0gxaEhEaz1JKWQrRDtXNVxOYj1eRzA2SVQ/Kj5HW11QRGFOJ043cU1LK1dLcGpibnFJcm1bV2dyVE8/KixwP29CVmxaYnI2XCc7NUhoVFZFNjdrMTE+Xmg6Oi5rSVhxXGc8cyU9amppSW9YNSMybCZUYjIhMytKTlotWl9jXkwzbzZxOV1DXW9rT2NFVidZXSU/UGRiVihgVWs8JW9VK29way0zVm9JX3JSNiNgajMiTzBBKHFxSWpiQUVcWlpdU0UrOHVQW2YxQTE2c1MpND1OWEVZSSlVMm89JVQxWm5ePVghV1JsZyJXKXBrSWlmZkorJzwwdVRhcD1qRm8kUkAlU2NVWWhFcClMVV0uJS9sdS1BVWgkI0FnSDoiUltrZi9MPmM2UDlZJTpWJildaWBLXSw4UD9kYEZALGU9TmhYOSgzQEtRYExMQUFRbnAtK0YjaytxM0dsYEU6MkAsJWRqUHVRUztZPys0MGIvXy9KYEQkMSwmc2REX1J1LSE8fj4KZW5kc3RyZWFtCmVuZG9iago0MyAwIG9iago8PAovQ29udGVudHMgNDQgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iago0NCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCAyNzEKPj4Kc3RyZWFtCkdiIW1LMGFeNiUkalBZJ1ZvWWVIMitjOSg+bTZkKEtcZXNqJkRqKVMrNys/M0s2UkNURGtTMyotTikmcjwvQVNaQU5gZ1ddMiUrNU89OWMwTSsrMWdValdkSitSYmYmZEAzJWZpWiwjMk4tRjtBM2lBaUlodHVGUDdTV11jT1xwK0VwIypCOS9mZSFfTzJkWGJOVls3SUkyX11Zb10zNyg3OF1oLFhnJDQvQCYiWWxGIlhdQGpUYG41RyQqbjRfKHE+bFE4cmBiYlpUTC5jNCQiITtjcjFAQEA5YWxRRlc1Z1I3ZG4xPltnZ3RbKStTcik0ITlXWWZuUTYxKypnJjM8QXItVF5XKUxvJVdVfj4KZW5kc3RyZWFtCmVuZG9iago0NSAwIG9iago8PAovQ29udGVudHMgNDYgMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iago0NiAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCAyNzEKPj4Kc3RyZWFtCkdiIW1LMGFeNiUkalBZJ1ZvWWVIMitjOSg+bTZkKEtcZXNqJkRqKVMrNys/M0s2UkNURGtTMyotTikmcjwvQVNaQU5gZ1ddMiUrNU89OWMwTSsrMWdValdkSitSYmYmZEAzJWZpWiwjMk4tRjtBM2lBaUlodHVGUDdTV11jT1xwK0VwIypCOS9mZSFfTzJkWGJOVls3SUkyX11Zb10zNyg3OF1oLFhnJDQvQCYiWWxGIlhdQGpUYG41RyQqbjRfKHE+bFE4cmBiYlpUTC5jNCQiITtjcjFAQEA5YWxRRlc1Z1I3ZG4xPltnZ3RbKStTcik0ITlXWWZuUTYxKypnJjM8QXItVF5XKUxvJVdVfj4KZW5kc3RyZWFtCmVuZG9iago0NyAwIG9iago8PAovQ29udGVudHMgNDggMCBSCi9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdCi9SZXNvdXJjZXMgPDwKL0ZvbnQgNiAwIFIKL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4KL1JvdGF0ZSAwCi9UcmFucyA8PAo+PgovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCj4+CmVuZG9iago0OCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0KL0xlbmd0aCA0MzcKPj4Kc3RyZWFtCkdiIWxbOWh0Z0YmO0taTi8qODYkQzFmUmhnRSZJIiFNY0MpZE5dUTtgMkomT18iZFhVXTdeYEk7OF5AYFtgTnUvZ1w4cktMQmtZbUwiNi1BIyZrPTlVNFt0IUU8PTQ5K2EwUCJaaEZtOzQsJlVyJDQpPmZqJGJZbTk+P0hnKFBxIz1cVTtcIy1MUFYmLS1rY2NdQlB1Z2lRVjRwV3JfYCppcVdlKk9PYy4uLVloJWtbJWBLUUM9LmFjVTllJUokKilOXCpuNHBXKFVdXlQ9ZnBoLDtRRGVmQyxPJWM+MFNlJmVKc2NWYyo6OUwzRU4wMFNCS0d0Y0IyO1QzTkgyJWpPSiIqRWpfPlxWY0ltIlg/a1g4KEhIbD85dC1PbTJPO3RKXVIjdEg5LywzLVQwQiwrciYsJTEwPFBkRlNELzQnWmxMKzpAaUx1WGBIalkjYV5QUi9PL0xQKUFNRkRwUVFXOFVdUjNxQylTX3EyQ0xnTS1rIVUqcl1HTDtZUmIzUEMvcClDYyUsN24vZHNIVUdOSDNvLW10TyZaVFhROi1wUkQsKVI5RGBxRDIlPGFLLiI/XH4+CmVuZHN0cmVhbQplbmRvYmoKNDkgMCBvYmoKPDwKL0NvbnRlbnRzIDUwIDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXQovUmVzb3VyY2VzIDw8Ci9Gb250IDYgMCBSCi9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+Ci9Sb3RhdGUgMAovVHJhbnMgPDwKPj4KL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKNTAgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdCi9MZW5ndGggMTc0Cj4+CnN0cmVhbQpHYXJXMlltUz81JjRIRW9NQ0RRcF1LJVkuPyghc2IwU2s7WSIlPkxIJmNdVWJOPWxlNUAlMkdaPkphVChoOSxkVE1UcWAjSkRTKiosLidfPDEoKGQsJDguVD9McyIxOGNYXS0lcnJGa0NBbWM8O2VeKGpwSyFUUy0qUiM/Y0laLzFlOTZPPHFkPGBLOGQ8LCdHTGlbdVhRZD50WkwlUiotczdJL0skYGVZKGcmfj4KZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNTEKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAwNTQgMDAwMDAgbiAKMDAwMDAwMDIyNiAwMDAwMCBuIAowMDAwMDAwMjc1IDAwMDAwIG4gCjAwMDAwMDA0NzQgMDAwMDAgbiAKMDAwMDAwMjU5NiAwMDAwMCBuIAowMDAwMDAyNjQ3IDAwMDAwIG4gCjAwMDAwMDI3NTQgMDAwMDAgbiAKMDAwMDAwMjg2NiAwMDAwMCBuIAowMDAwMDAyOTgxIDAwMDAwIG4gCjAwMDAwMDMxODMgMDAwMDAgbiAKMDAwMDAwMzcyNiAwMDAwMCBuIAowMDAwMDAzNzcwIDAwMDAwIG4gCjAwMDAwMDM4NzggMDAwMDAgbiAKMDAwMDAwMzk5MSAwMDAwMCBuIAowMDAwMDA0MTkyIDAwMDAwIG4gCjAwMDAwMDQ3NjUgMDAwMDAgbiAKMDAwMDAwNDk2NiAwMDAwMCBuIAowMDAwMDA1NDM0IDAwMDAwIG4gCjAwMDAwMDU2MzYgMDAwMDAgbiAKMDAwMDAwNjIyOCAwMDAwMCBuIAowMDAwMDA2MjcyIDAwMDAwIG4gCjAwMDAwMDYzODAgMDAwMDAgbiAKMDAwMDAwNjQ5MyAwMDAwMCBuIAowMDAwMDA2Njk0IDAwMDAwIG4gCjAwMDAwMDcxNzEgMDAwMDAgbiAKMDAwMDAwNzM3MiAwMDAwMCBuIAowMDAwMDA3NzAwIDAwMDAwIG4gCjAwMDAwMDc5MDIgMDAwMDAgbiAKMDAwMDAwODgzMCAwMDAwMCBuIAowMDAwMDA4ODc0IDAwMDAwIG4gCjAwMDAwMDg5ODIgMDAwMDAgbiAKMDAwMDAwOTA5NSAwMDAwMCBuIAowMDAwMDA5Mjk2IDAwMDAwIG4gCjAwMDAwMDk4ODggMDAwMDAgbiAKMDAwMDAxMDA4OSAwMDAwMCBuIAowMDAwMDEwNDUyIDAwMDAwIG4gCjAwMDAwMTA2NTMgMDAwMDAgbiAKMDAwMDAxMTAxNiAwMDAwMCBuIAowMDAwMDExMjE3IDAwMDAwIG4gCjAwMDAwMTE1NTQgMDAwMDAgbiAKMDAwMDAxMTc1NSAwMDAwMCBuIAowMDAwMDEyNDMxIDAwMDAwIG4gCjAwMDAwMTI2MzIgMDAwMDAgbiAKMDAwMDAxMjk5NSAwMDAwMCBuIAowMDAwMDEzMTk2IDAwMDAwIG4gCjAwMDAwMTM1NTkgMDAwMDAgbiAKMDAwMDAxMzc2MCAwMDAwMCBuIAowMDAwMDE0Mjg5IDAwMDAwIG4gCjAwMDAwMTQ0OTAgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1MQovUm9vdCAzIDAgUgovSW5mbyAxIDAgUgo+PgpzdGFydHhyZWYKMTQ3NTYKJSVFT0YK" download="Paper3B_Predicted_Exam_B.pdf" target="_blank" onclick="return openOrDownload(event, this)">Download Paper B (PDF)</a>
+    </div>
+  </div>
+
+  <div class="exam-tips">
+    <h4>How to use these papers</h4>
+    <ul>
+      <li><b>Section A (12 marks, &asymp;15 mins):</b> choose EITHER 1(a) OR 1(b) &mdash; an "examine the similarities/differences" question. Structure as paired points: a similarity/difference, explained, with an example for each side.</li>
+      <li><b>Section B (12 marks, &asymp;15 mins):</b> compulsory &mdash; "analyse the differences" between two theoretical views, explicitly naming the core political ideas/thinkers involved.</li>
+      <li><b>Section C (2 &times; 30 marks, &asymp;45 mins each):</b> pick TWO of the three "evaluate the view..." essays. Always argue both sides in a genuinely balanced way, make synoptic links across Global Politics topics, and use a contemporary example for each point.</li>
+      <li>Total timing: 2 hours for 84 marks &mdash; roughly 1 minute per mark, so allow about 15+15+45+45 minutes across the four questions, with 5 minutes to spare for checking.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="fmark">Edexcel A Level Politics</div>
+  Paper 3: Global Politics &mdash; Revision Hub
+</footer>
+
+<script id="cards-data" type="application/json">
+[{"topic": "The State & Globalisation", "sub": "Nation-State & Sovereignty", "q": "Define the nation-state and national sovereignty, with contemporary examples.", "a": "A nation-state is a political community bound together by citizenship and nationality - a defined territory, a permanent population sharing a common identity, a government, and recognition by other states.\n\nNational sovereignty is the state's absolute power over its citizens and territory - the supreme authority to make and enforce laws without external interference. Internally: a monopoly on legitimate force. Externally: no higher authority exists above the state in the international system.\n\nRussia's invasion of Ukraine (2022-present) violated Ukrainian national sovereignty; the international response (sanctions, military aid) reflected the principle that sovereignty should be respected but exposed enforcement limits. Brexit was driven partly by the desire to restore UK sovereignty over laws, borders, and trade - states asserting sovereignty against supranational institutions. China-Taiwan: China claims sovereignty over Taiwan, illustrating how contested sovereignty becomes a global flashpoint.\n\nA* point: sovereignty is increasingly a contested claim rather than an absolute fact - the gap between legal sovereignty (recognised authority) and practical sovereignty (ability to exercise that authority free of external constraint) is widening under globalisation."}, {"topic": "The State & Globalisation", "sub": "The Process of Globalisation", "q": "Explain the process of globalisation and its dimensions, with contemporary examples.", "a": "Globalisation is a complex web of interconnectedness - the interlinking of people, countries, institutions, culture, economics, technology, and politics across borders. Driven by technological advances, free trade agreements, multinational corporations, migration, cultural exchange, and international institutions.\n\nEconomic globalisation: growth of global trade, investment, and financial markets; TNCs operating across borders. Political globalisation: growth of international organisations (UN, EU, WTO) and international law. Cultural globalisation: spread of ideas, values, media, and consumer culture across borders.\n\nCOVID-19 (2020) demonstrated interconnectedness - a virus originating in China spread globally within weeks, disrupting supply chains, economies, and politics worldwide. Social media platforms (TikTok, X) allow instant global cultural exchange - the spread of Black Lives Matter from the US to the UK illustrates cultural globalisation. The 2021 Suez Canal blockage disrupted global trade worth $9.6bn per day, showing economic interconnectedness.\n\nA* point: globalisation is not a single uniform process - economic, political, and cultural globalisation proceed at different speeds and can even pull in opposite directions (economic integration alongside political fragmentation, as with Brexit)."}, {"topic": "The State & Globalisation", "sub": "Impact on the State System", "q": "Evaluate globalisation's impact on the state system and the hyperglobaliser/sceptic/transformationalist debate.", "a": "Widening and deepening interconnectedness means states are increasingly interdependent - no state can act entirely independently. Globalisation limits state sovereignty over capital flows, migration, climate, and digital communication. The growing body of international law (human rights, trade, environmental) constrains sovereignty. Responsibility to Protect (R2P) holds that sovereignty is conditional - if a state fails to protect its people, the international community may intervene.\n\nHyperglobalisers: globalisation is transforming world politics; the nation-state is in decline as power shifts to global markets, TNCs, and international institutions - borders are increasingly irrelevant.\n\nGlobalisation sceptics (realist): globalisation is exaggerated; states remain the dominant actors; much 'global' trade is actually regional; states can still control borders and economies.\n\nTransformationalists: globalisation is real and significant but its outcome is uncertain - states are being transformed, not replaced; they adapt to new challenges but retain significant power.\n\nRussia's reassertion of sovereignty (invasion of Ukraine, rejection of international law) supports the sceptic view. AUKUS (2021) shows states still prioritise national security over global governance. The Paris Agreement (2015) supports the transformationalist view - states cooperated on a global issue but retained sovereignty over targets and implementation.\n\nA* point: the three-way debate maps onto a spectrum of how much agency states retain - the most defensible position (transformationalist) is that the state has changed its functions rather than lost power absolutely."}, {"topic": "The State & Globalisation", "sub": "Advantages & Disadvantages of Globalisation", "q": "Evaluate the advantages and disadvantages of globalisation with contemporary examples.", "a": "Advantages: economic growth through free trade and investment - has lifted millions out of poverty (especially China and India); cultural exchange promotes tolerance; spread of democracy, human rights norms, and the rule of law; technological progress benefits all societies; international cooperation addresses problems no state can solve alone (climate, pandemics, terrorism).\n\nDisadvantages: increased inequality between and within states - benefits concentrated among wealthy nations and elites; loss of national sovereignty and democratic accountability; cultural homogenisation - Western/American culture threatens local cultures; environmental degradation from global production and consumption; economic vulnerability - interconnectedness means crises spread rapidly (2008); 'race to the bottom' - states compete by lowering wages, taxes, and regulations.\n\nChina's economic rise lifted hundreds of millions out of poverty but also created vast inequality and environmental destruction - illustrating both advantages and disadvantages simultaneously. The 2008 global financial crisis originated in US subprime mortgages but spread globally within weeks. Fast fashion delivers cheap clothing to Western consumers but relies on low-wage labour in Bangladesh and Vietnam - the 2013 Rana Plaza collapse killed 1,134 workers.\n\nA* point: the advantages and disadvantages of globalisation are not evenly distributed - the same process that lifts a country's aggregate GDP can simultaneously devastate specific communities within it (the 'losers of globalisation' thesis), which helps explain the rise of populist nationalism in developed economies."}, {"topic": "The State & Globalisation", "sub": "Globalisation & Contemporary Issues", "q": "How does globalisation affect poverty, conflict, human rights, and the environment?", "a": "Poverty: globalisation has reduced absolute poverty globally - World Bank: extreme poverty fell from 36% in 1990 to under 10% by 2020 - but increased relative inequality. TNCs create jobs but often exploit workers. The North-South divide persists.\n\nConflict: globalisation can reduce conflict through interdependence (liberal view - states that trade together are less likely to fight) but can also fuel conflict through competition for resources, cultural clashes, and the spread of weapons technology.\n\nHuman rights: globalisation spreads human rights norms through international law, NGOs, and media exposure. But powerful states selectively enforce rights, and globalisation enables new abuses (trafficking, digital surveillance).\n\nEnvironment: globalisation drives environmental damage through industrialisation and consumption, but also enables international cooperation (Paris Agreement) and spreads green technology.\n\nThe UN Sustainable Development Goals (2015-2030) provide a global framework to address poverty, inequality, and environmental degradation - progress has been uneven and COVID reversed gains in many areas. The Ukraine conflict disrupted grain exports, causing food price spikes in Africa and the Middle East - conflict in one region creates global consequences. COP28 (2023) produced the first agreement to 'transition away from fossil fuels' but was criticised for weak enforcement.\n\nA* point: each of these issues demonstrates the same underlying tension - globalisation creates problems that are inherently global in scope, but the political institutions available to address them (states, treaties requiring unanimous consent) remain fundamentally national or voluntary."}, {"topic": "Global Governance: Political & Economic", "sub": "The United Nations", "q": "Explain the UN's origins, key bodies, and their strengths and weaknesses.", "a": "Origins: founded in 1945 after WWII to maintain international peace and security. The UN Charter established its principles: sovereign equality of states, peaceful settlement of disputes, collective security, and human rights.\n\nSecurity Council: 5 permanent members (P5: US, UK, France, Russia, China) with veto power, plus 10 rotating members. Primary responsibility for international peace and security - can authorise sanctions, peacekeeping, and military intervention. Strengths: binding resolutions, legitimacy. Weaknesses: P5 veto paralyses action when great powers disagree.\n\nGeneral Assembly: all 193 member states, one vote each - debates global issues and passes non-binding resolutions. Strengths: universal representation, democratic legitimacy. Weaknesses: resolutions non-binding, dominated by bloc voting.\n\nECOSOC: coordinates economic and social work of the UN and its agencies - oversees development, health, education. Strengths: broad scope. Weaknesses: limited enforcement, overshadowed by IMF/World Bank.\n\nICJ: the UN's principal judicial organ - rules on disputes between states and gives advisory opinions. Strengths: upholds international law. Weaknesses: states must consent to jurisdiction; no enforcement mechanism.\n\nRussia has repeatedly vetoed Security Council resolutions on its own invasion of Ukraine - demonstrating how the veto paralyses the UN when a P5 member is the aggressor. The ICJ's 2024 advisory opinion that Israel's occupation of Palestinian territories is unlawful was rejected by Israel, highlighting the Court's lack of enforcement power. UNMISS in South Sudan has over 15,000 personnel but has faced criticism for failing to prevent atrocities - illustrating the gap between mandate and capacity.\n\nA* point: the UN's structural design embeds 1945 power realities (the P5) into a body that claims universal legitimacy - this founding contradiction explains most of its contemporary paralysis."}, {"topic": "Global Governance: Political & Economic", "sub": "NATO", "q": "Evaluate NATO's role, evolution, strengths, and weaknesses with contemporary examples.", "a": "NATO is a military alliance founded in 1949 during the Cold War, based on collective defence - Article 5: an attack on one member is an attack on all.\n\nPost-Cold War role has evolved from defending Western Europe against the Soviet Union to humanitarian intervention (Kosovo 1999), counter-terrorism (Afghanistan 2001-21), and deterring Russian aggression.\n\nStrengths: the most powerful military alliance in history; US backing gives it unmatched capacity; Article 5 provides credible deterrence.\n\nWeaknesses: burden-sharing disputes (most members don't meet the 2% GDP defence spending target); questions about relevance after the Cold War (pre-2022); US commitment under different administrations is uncertain.\n\nFinland (2023) and Sweden (2024) joined NATO - Russia's invasion of Ukraine reversed decades of Nordic neutrality, demonstrating NATO's continued relevance and attractiveness. NATO has coordinated military aid, intelligence sharing, and training for Ukraine without direct intervention - adapting to a new type of conflict while avoiding direct confrontation with Russia. Trump repeatedly questioned US commitment to NATO and demanded allies spend more - raising fundamental questions about NATO's future if the US disengages.\n\nA* point: NATO's post-2022 expansion is the clearest evidence against the 'NATO is obsolete' thesis that dominated debate in the 2010s - but its long-term cohesion still depends entirely on the uncertain variable of US domestic politics."}, {"topic": "Global Governance: Political & Economic", "sub": "IMF & World Bank", "q": "Evaluate the IMF and World Bank, their functions, and criticisms.", "a": "Both created at Bretton Woods (1944) to stabilise the post-war global economy.\n\nIMF: provides short-term financial assistance to countries in economic crisis; monitors global economic stability; imposes conditions (Structural Adjustment Programmes/SAPs) requiring fiscal austerity, privatisation, and market liberalisation. Criticisms: SAPs cause social harm (cuts to healthcare, education); voting is weighted by financial contribution, giving Western states disproportionate power; imposes a one-size-fits-all neoliberal model.\n\nWorld Bank: provides long-term development loans and grants to developing countries for infrastructure, education, and poverty reduction. Criticisms: projects sometimes cause environmental damage or displace communities; conditions attached to loans can undermine sovereignty; dominated by the US and Europe.\n\nAfter economic collapse, Sri Lanka received a $2.9bn IMF bailout (2023) with strict conditions including tax increases and spending cuts - critics argued austerity worsened poverty for ordinary citizens. Under President Ajay Banga (2023-), the World Bank has increased climate-related lending, reflecting growing pressure to address environmental issues alongside poverty. Through the Belt and Road Initiative, China offers development loans without IMF-style conditions - challenging Western-dominated institutions and offering developing countries an alternative.\n\nA* point: China's alternative lending model is significant precisely because it removes the leverage that has historically allowed the IMF/World Bank to impose policy conditions - this represents a genuine structural challenge to Western economic governance, not just a rhetorical one."}, {"topic": "Global Governance: Political & Economic", "sub": "WTO, G7/G8 & G20", "q": "Evaluate the WTO, G7, and G20 as institutions of global economic governance.", "a": "WTO: regulates international trade through agreed rules and resolves trade disputes. Strengths: provides a rules-based trading system, reduces protectionism. Weaknesses: the Doha Round has stalled since 2001; developing countries argue rules favour wealthy nations; the appellate body has been blocked by the US since 2019.\n\nG7: the seven largest advanced economies (US, UK, France, Germany, Italy, Canada, Japan) meet annually to coordinate economic policy. Strengths: high-level political will, agenda-setting power. Weaknesses: no enforcement, excludes most of the world, declining share of global GDP.\n\nG20: the 20 largest economies (including China, India, Brazil, Russia), representing 80% of global GDP. Strengths: more representative than G7, was critical during the 2008 financial crisis. Weaknesses: too large for decisive action, no binding commitments, geopolitical rivalries.\n\nThe US has blocked appointments to the WTO appellate body since 2019, undermining the rules-based trading system and reflecting scepticism about multilateral institutions. The G7 Hiroshima Summit (2023) coordinated sanctions on Russia and pledged support for Ukraine, demonstrating continued relevance in security coordination but also its limits as a club of Western-aligned states. The G20 New Delhi Summit (2023) - under India's presidency - brought developing world priorities to the table, but divisions over the Ukraine war prevented a strong joint statement.\n\nA* point: the trajectory across all three institutions is the same - growing representativeness (G20 over G7, more WTO members) has come at the cost of decisiveness, illustrating a structural trade-off in global economic governance between legitimacy and effectiveness."}, {"topic": "Global Governance: Political & Economic", "sub": "Poverty & Development Theories", "q": "Explain the North-South divide, world-systems/dependency theory, and development theories.", "a": "North-South divide: the persistent gap between wealthy developed nations (mostly global North) and poorer developing nations (mostly global South).\n\nWorld-systems theory (Wallerstein): the global economy has a core (wealthy, industrialised states that exploit the periphery), a periphery (poor states providing cheap labour and raw materials), and a semi-periphery (states in between). Inequality is structural, not accidental.\n\nDependency theory: developing countries are poor because of their exploitative relationship with developed countries, not internal failings. Colonial legacies, unfair trade rules, and debt traps keep the South dependent on the North.\n\nMeasurements: orthodox - World Bank poverty line ($2.15/day), GDP per capita, Human Development Index (HDI). Alternative - Multidimensional Poverty Index (MPI), Gini coefficient, genuine progress indicators accounting for environmental damage and unpaid labour.\n\nDevelopment theories: Classical (Rostow's stages of growth - all societies pass through the same stages; aid and investment accelerate this). Structural (poverty caused by the structure of the global economy - linked to dependency/world-systems theory). Neo-classical (free markets, deregulation, privatisation, trade liberalisation - the Washington Consensus, influenced IMF/World Bank SAPs).\n\nDespite decades of aid, many Sub-Saharan African countries remain trapped in poverty - dependency theorists argue unfair trade rules and debt servicing drain wealth from the continent. China's development lifted 800 million people out of poverty through state-directed capitalism, challenging both neo-classical and dependency frameworks. The Jubilee 2000 movement led to significant debt cancellation for heavily indebted poor countries; renewed calls for debt relief followed COVID as developing country debt reached record levels.\n\nA* point: China's experience is the single most theoretically disruptive case study in development - it achieved the outcomes neo-classical theory predicts (growth through integration into global markets) via methods structural/dependency theory would predict to fail (heavy state direction), undermining the universal claims of both frameworks."}, {"topic": "Global Governance: Political & Economic", "sub": "Effectiveness, Reform & Global Civil Society", "q": "Why do the UN Security Council, IMF, and World Bank face reform pressure, and what role do NGOs play?", "a": "UN Security Council failures: P5 membership reflects 1945 power structures, not today's world - no permanent seats for India, Brazil, Japan, or any African state. The veto allows any P5 member to block action, even when they are the aggressor (Russia on Ukraine, China on Myanmar). This leads to selective intervention - action depends on P5 interests, not the severity of the crisis.\n\nIMF/World Bank failures: Western-dominated governance (the US has an effective veto at the IMF); SAPs impose austerity that causes social harm; criticised for promoting a one-size-fits-all neoliberal model. Reform pressure: greater voting power for developing countries, more focus on climate and inequality; alternatives like China's AIIB challenge their monopoly.\n\nGlobal civil society and NGOs (Amnesty International, MSF, Oxfam, Greenpeace) address issues states and international institutions fail to resolve - they raise awareness, provide humanitarian aid, monitor human rights, and advocate for policy change. Strengths: independence, expertise, public trust, speed of response. Weaknesses: limited power, dependent on donations, can lack accountability, may impose Western values.\n\nRussia's repeated vetoes on Ukraine resolutions make the UN impotent on the biggest security crisis in Europe since 1945. MSF provided medical care in Sudan's civil war (2023-24) when states and international institutions failed to intervene effectively. The 2018 Oxfam scandal (sexual exploitation by staff in Haiti) damaged the credibility of NGOs and raised accountability questions in the aid sector.\n\nA* point: reform proposals for both the Security Council and Bretton Woods institutions have existed for decades without implementation - the same actors who would need to vote for reform (the P5, the major Western shareholders) are the ones who would lose power from it, making genuine reform structurally almost impossible without external shock."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "Human Rights Institutions", "q": "Explain the origins and development of international human rights law and its key institutions.", "a": "The 1948 Universal Declaration of Human Rights (UDHR) established universal human rights standards after the Holocaust - not legally binding but morally authoritative and foundational to subsequent human rights law.\n\nICJ: rules on disputes between states - limited by the requirement for state consent to jurisdiction.\n\nICC: prosecutes individuals for genocide, war crimes, and crimes against humanity. Created by the Rome Statute (2002). Limited because the US, China, and Russia have not ratified.\n\nSpecial UN tribunals: ad hoc courts for specific conflicts (Rwanda, former Yugoslavia).\n\nECHR (European Court of Human Rights): enforces the European Convention on Human Rights for Council of Europe members - individuals can bring cases against states.\n\nThe ICC issued an arrest warrant for Putin (2023) for the unlawful deportation of Ukrainian children - Putin is unlikely to be arrested, highlighting enforcement limitations, but the warrant carries symbolic and legal significance. South Africa brought an ICJ genocide case against Israel (2024) alleging genocide in Gaza - the ICJ ordered provisional measures but enforcement depends on political will. The ICC has been accused of disproportionately targeting African leaders while ignoring Western crimes; several African states have threatened withdrawal.\n\nA* point: every institution in this framework shares the same structural weakness - they depend on the voluntary cooperation of the very states they are meant to hold accountable, meaning their effectiveness is inversely correlated with the power of the state being judged."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "Sovereignty, Intervention & R2P", "q": "Evaluate humanitarian intervention, R2P, and the problem of selective interventionism.", "a": "International human rights law challenges the principle that states have absolute authority within their borders - states increasingly face external scrutiny and accountability.\n\nHumanitarian intervention grew in the 1990s (Somalia, Bosnia, Kosovo, Sierra Leone) - sometimes successful (Sierra Leone, Kosovo ended ethnic cleansing) and sometimes unsuccessful (Somalia - Black Hawk Down; Rwanda - failure to intervene led to 800,000 deaths).\n\nResponsibility to Protect (R2P), adopted by the UN in 2005: states have a responsibility to protect their populations from genocide, war crimes, ethnic cleansing, and crimes against humanity. If they fail, the international community should intervene - directly conflicting with sovereignty.\n\nSelective interventionism: the international community intervenes in some crises but not others, depending on strategic interests - leading to accusations of Western double standards and hypocrisy.\n\nNATO intervened in Libya (2011) under R2P to protect civilians - Gaddafi was overthrown but the country descended into chaos, discrediting R2P and making future interventions less likely. No intervention occurred in Syria despite chemical weapons use and mass civilian casualties - Russia's veto blocked Security Council action, demonstrating selective interventionism. Critics contrast the strong response to Russia's invasion of Ukraine with the muted response to Saudi Arabia's war in Yemen or Israel's actions in Gaza, arguing interventionism is driven by geopolitical interests rather than humanitarian principles.\n\nA* point: Libya is the pivotal case study - its failure didn't just damage R2P's reputation, it arguably contributed directly to the international community's reluctance to intervene in Syria shortly afterward, showing how one intervention's consequences shape subsequent decisions."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "UNFCCC & IPCC", "q": "Explain the role of the UNFCCC and IPCC in environmental governance.", "a": "UNFCCC: established at the 1992 Rio Earth Summit, providing the framework for international climate negotiations. Nearly all states are members. Annual COP (Conference of the Parties) meetings set targets and agreements.\n\nIPCC: the scientific body that assesses climate science and provides evidence to policymakers. Its reports (most recently AR6, 2021-23) confirm that human activity is causing climate change. Strengths: scientific authority, global credibility. Weaknesses: reports are consensus-based (sometimes watered down), and states are not obliged to act on findings.\n\nThe IPCC AR6 report (2023) warned that 1.5C warming could be reached by the early 2030s without drastic action, describing the situation as 'now or never'. COP28 in Dubai (2023) produced the first agreement to 'transition away from fossil fuels' but was criticised for weak language and no binding enforcement - and was hosted by a petrostate (UAE), raising concerns about conflicts of interest. COP26 in Glasgow (2021) produced the Glasgow Climate Pact - countries pledged to revisit targets but many have since fallen behind on commitments.\n\nA* point: the IPCC/UNFCCC division of labour - science vs negotiation - reveals a recurring pattern in global environmental governance: the scientific consensus (IPCC) consistently outpaces the political consensus (UNFCCC/COP), meaning the gap between what is known to be necessary and what is politically agreed keeps widening even as the science becomes more urgent."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "Shallow vs Deep Green & Sustainable Development", "q": "Compare shallow-green and deep-green ecology, and explain sustainable development and the tragedy of the commons.", "a": "Shallow-green ecology: environmental problems can be solved within existing economic and political structures through regulation, technology, and market mechanisms (carbon trading, green technology). Anthropocentric - nature has value because of its usefulness to humans.\n\nDeep-green ecology: requires fundamental transformation of human society and values. The environment has intrinsic value independent of human use. Requires reducing consumption, rejecting growth-based economics, and living within ecological limits. Ecocentric.\n\nSustainable development: development that meets the needs of the present without compromising the ability of future generations to meet their needs (Brundtland, 1987) - attempts to balance economic growth with environmental protection.\n\nTragedy of the commons: shared resources (atmosphere, oceans, forests) are overexploited because no single actor bears the full cost. Without collective regulation, rational individual behaviour leads to collective disaster.\n\nCOP28's 'transition away from fossil fuels' language represents a shallow-green compromise - working within existing economic structures rather than the deep-green demand for de-growth. The atmosphere as a global commons is the clearest real-world tragedy-of-the-commons case: every state benefits from emitting (cheap energy, growth) while the cost (climate change) is borne collectively and globally, creating a structural incentive for free-riding.\n\nA* point: the shallow/deep distinction maps directly onto the realism/liberalism divide in IR theory - shallow-green approaches are compatible with a state-centric, market-based world order, while deep-green approaches implicitly require the kind of fundamental restructuring of sovereignty and economic organisation that realists would consider utopian and liberals would consider, at best, a very long-term project."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "Key Climate Agreements", "q": "Trace the key international climate agreements (Rio, Kyoto, Copenhagen, Paris) and obstacles to cooperation.", "a": "Rio (1992): established the UNFCCC and the principle of 'common but differentiated responsibilities' - developed countries bear more responsibility.\n\nKyoto (1997): set binding emissions targets for developed countries. The US never ratified. Limited by excluding developing countries.\n\nCopenhagen (2009): failed to produce a binding agreement - widely seen as a failure of international cooperation.\n\nParis (2015): all states set their own nationally determined contributions (NDCs). Aims to limit warming to 1.5-2C. Strengths: universal participation. Weaknesses: targets are voluntary, no enforcement, current pledges are insufficient.\n\nObstacles to cooperation: sovereignty (states prioritise economic growth over emissions cuts); developed vs developing world disagreement over responsibility and who bears costs; measurement disputes; free-rider problems; fossil fuel industry lobbying.\n\nTrump withdrew from Paris (2017), Biden rejoined (2021), Trump withdrew again (2025) - demonstrating how sovereignty and domestic politics undermine international cooperation. China and India - the world's largest emitters - argue developed countries industrialised first and should bear more responsibility; the 'common but differentiated responsibilities' principle remains contested. The Loss and Damage Fund agreed at COP27 (2022) was a breakthrough in principle - compensating developing countries for climate damage - but funding commitments remain far below what is needed.\n\nA* point: the evolution from Kyoto (binding targets, narrow participation, US non-ratification) to Paris (universal participation, voluntary targets) represents a fundamental trade-off the international community has made - sacrificing enforceability for breadth of participation - and the US withdrawal/rejoining/withdrawal cycle shows that even voluntary agreements remain hostage to single-state domestic politics."}, {"topic": "Global Governance: Human Rights & Environment", "sub": "Environmental NGOs", "q": "Evaluate the role of environmental NGOs and global civil society in climate governance.", "a": "Environmental NGOs (Greenpeace, WWF, Friends of the Earth) raise awareness, lobby governments, and monitor compliance with agreements. Strengths: independence, scientific expertise, public mobilisation. Weaknesses: limited power to enforce change, sometimes seen as Western-centric.\n\nGreta Thunberg and the Fridays for Future movement became a global youth movement that put climate urgency on the political agenda - demonstrating the power of civil society to shape public discourse. Greenpeace's Arctic campaigns - direct action against oil drilling - raised awareness and contributed to some companies withdrawing from Arctic exploration. The WWF Living Planet Report (2024) documented a 73% decline in global wildlife populations since 1970, providing evidence that shaped public and political debate.\n\nA* point: environmental NGOs' primary lever of influence is agenda-setting and reputational pressure (shaping what governments and corporations feel they must publicly respond to) rather than direct enforcement - their effectiveness is therefore contingent on functioning media ecosystems and consumer/voter responsiveness, which varies enormously between democratic and authoritarian contexts."}, {"topic": "Power & Developments", "sub": "Types of Power", "q": "Distinguish between hard and soft power, military and economic, diplomatic and cultural, with contemporary examples.", "a": "Hard power - military: the use or threat of armed force to achieve objectives. Effective for deterrence and defence but costly, risks escalation, and cannot solve all problems (failed in Afghanistan, Iraq).\n\nHard power - economic: sanctions, trade agreements, aid conditionality, and financial leverage. Effective when the target is economically vulnerable but can harm ordinary citizens and be circumvented.\n\nSoft power - diplomatic: influence through negotiation, multilateral institutions, and alliance-building. Builds legitimacy but is slow and requires consensus.\n\nSoft power - cultural: influence through values, culture, education, and media (Hollywood, BBC, universities). Attracts rather than coerces - effective for long-term influence but difficult to measure and cannot replace hard power in crises.\n\nWestern sanctions on Russia (2022-present) represent economic hard power designed to punish the invasion of Ukraine - significant impact on Russia's economy but have not ended the war, and Russia has found alternative markets (China, India). China's Belt and Road Initiative combines economic hard power (infrastructure investment creating dependency) with soft power (cultural influence, diplomatic goodwill) - demonstrating how states blend power types. UK soft power - the BBC World Service, British universities, the English language, and the Premier League - gives the UK disproportionate cultural influence, consistently ranked among the top soft power nations globally.\n\nA* point: the Russia sanctions case is the key contemporary test of economic hard power's limits - it shows that even severe, coordinated economic coercion from the world's largest economies cannot reliably compel a determined, resource-rich state to change course if it has alternative markets and is willing to absorb domestic costs."}, {"topic": "Power & Developments", "sub": "Great Powers, Superpowers & Emerging Powers", "q": "Explain the classifications of state power with contemporary examples.", "a": "Great powers: states with significant military, economic, and diplomatic influence regionally and globally (UK, France, Germany, Japan) - they shape international affairs but cannot dominate alone.\n\nSuperpowers: states with dominant global military, economic, and cultural power. Currently only the USA qualifies, though China is approaching superpower status. The US has the world's largest military, largest economy, and dominant cultural influence (Hollywood, tech companies, universities).\n\nEmerging powers - BRICS (Brazil, Russia, India, China, South Africa): states with growing economic and political influence challenging Western-dominated global governance. Expanded in 2024 to include Egypt, Ethiopia, Iran, Saudi Arabia, and the UAE.\n\nThe US spends more on defence than the next 10 countries combined, maintains military bases in over 70 countries, and remains the world's only full superpower. China's rise - the world's second-largest economy, largest trading nation, and growing military power - the Belt and Road Initiative extends Chinese influence across Asia, Africa, and Latin America. BRICS expansion (2024) reflects the growing desire of developing nations for an alternative to Western-dominated institutions (IMF, World Bank, G7).\n\nA* point: the BRICS expansion is significant less for its immediate practical impact (the bloc remains highly internally divided - India and China have unresolved border tensions) than for its symbolic function: it signals that a critical mass of states now see value in publicly aligning against the Western-led order, even if substantive cooperation remains limited."}, {"topic": "Power & Developments", "sub": "Polarity & the Changing World Order", "q": "Explain unipolarity, bipolarity, and multipolarity, and evaluate the changing world order since 2000.", "a": "Unipolarity/hegemony: one dominant superpower (the US after the Cold War, 1991-c.2008). Advantages: stability through a single enforcer. Disadvantages: the hegemon may act unilaterally and provoke resentment (Iraq 2003).\n\nBipolarity: two dominant superpowers (US and USSR during the Cold War). Advantages: stability through mutual deterrence (MAD). Disadvantages: arms races, proxy wars, division of the world into blocs.\n\nMultipolarity: multiple centres of power (the emerging 21st-century order). Advantages: more representative, no single hegemon. Disadvantages: greater instability, competition, difficulty reaching agreements.\n\nThe post-Cold War unipolar moment has given way to an increasingly multipolar world - China's rise, Russia's assertiveness, the relative decline of US dominance, the growth of regional powers (India, Turkey, Saudi Arabia), and the weakening of multilateral institutions all point toward multipolarity.\n\nUS-China strategic competition is the defining geopolitical rivalry of the 21st century - trade wars, technology competition (AI, semiconductors), and tensions over Taiwan suggest a shift toward bipolarity or multipolarity. Russia's invasion of Ukraine was an attempt by a declining power to reassert regional dominance - it challenged the US-led unipolar order but also revealed Russia's military limitations. Under Modi, India has pursued strategic autonomy - buying Russian oil while deepening ties with the US - reflecting a multipolar world where states hedge rather than align with a single bloc.\n\nA* point: India's 'multi-alignment' strategy is the clearest evidence of genuine multipolarity emerging - in a bipolar or unipolar world, a state of India's size would be forced to choose a bloc; its ability to simultaneously deepen ties with both the US and Russia demonstrates that no single power can compel exclusive alignment."}, {"topic": "Power & Developments", "sub": "Systems of Government", "q": "Classify different systems of government with contemporary examples.", "a": "Democratic states: free and fair elections, protection of civil liberties, rule of law, independent judiciary, free press. Examples: UK, France, Canada.\n\nSemi-democratic states: some democratic features but with significant restrictions on opposition, media, or civil liberties - hybrid regimes. Examples: Turkey, Hungary, Nigeria.\n\nNon-democratic/autocratic states: no meaningful elections, suppression of opposition, state control of media, limited or no civil liberties. Examples: China, Saudi Arabia, North Korea.\n\nFailed states: the government has lost control over its territory, cannot provide basic services or security. Examples: Somalia, Yemen, South Sudan.\n\nRogue states: states that violate international norms, support terrorism, pursue WMDs, or threaten regional stability. Examples: North Korea, Iran (debated).\n\nIn Hungary, Orban has eroded judicial independence, press freedom, and civil society while maintaining elections - the EU has struggled to respond, raising questions about democratic backsliding within international organisations. Yemen's civil war since 2014 has destroyed governance, creating a humanitarian crisis with millions facing famine - demonstrating how state failure creates regional instability. North Korea, the most isolated autocratic state, has a nuclear weapons programme that makes it a 'rogue state' threatening regional and global security.\n\nA* point: Hungary is the most theoretically important case here because it demonstrates 'democratic backsliding' from within - rather than a coup or revolution, an elected government has used legal and electoral mechanisms to dismantle democratic checks, and existing international frameworks (EU membership) have proven largely inadequate to reverse this, raising questions about whether classification systems based on discrete categories (democratic/semi-democratic/autocratic) can capture gradual, internally-driven regime change."}, {"topic": "Power & Developments", "sub": "Spread of Liberal Economies, Rule of Law & Democracy", "q": "Evaluate the spread and recent recession of liberal economies, the rule of law, and democracy.", "a": "Liberal economies: free-market capitalism has spread globally since the end of the Cold War, driven by globalisation, the Washington Consensus, and the collapse of communist alternatives. But the 2008 crisis and China's state-capitalist model have challenged the universality of the liberal economic model.\n\nRule of law: international institutions promote the rule of law but it remains weak or absent in many states - corruption, weak judiciaries, and authoritarian governance undermine it.\n\nDemocracy: the 'third wave' of democratisation (1970s-2000s) saw democracy spread across Latin America, Eastern Europe, and parts of Africa and Asia. But since the mid-2000s there has been a 'democratic recession' - Freedom House reports that global freedom has declined for 18 consecutive years.\n\nFreedom House's 2024 report showed democracy declining globally - authoritarian states (China, Russia) offer an alternative model, while established democracies face populism and polarisation. China's economic success without liberal democracy challenges the assumption that free markets and democracy go together. In Poland, the PiS government (2015-23) undermined judicial independence; the new Tusk government is attempting to restore it - showing the rule of law can be damaged and rebuilt.\n\nA* point: the 'democratic recession' and China's state-capitalist success are two sides of the same theoretical challenge to the post-Cold War 'end of history' thesis (Fukuyama) - the assumption that liberal democracy and free-market capitalism are an indissoluble package that all states would eventually converge on has been undermined by both internal democratic backsliding in established democracies and the external example of a successful authoritarian-capitalist alternative."}, {"topic": "Power & Developments", "sub": "Changing Relationships & Contemporary Issues", "q": "How do the Ukraine conflict, US-China rivalry, and climate politics illustrate the changing world order?", "a": "The Ukraine conflict is the most significant challenge to the post-Cold War order - it tests NATO unity, UN effectiveness, and the principle that borders cannot be changed by force.\n\nUS-China rivalry shapes development aid, trade, and technology access for developing countries - both seek influence in the Global South, turning development assistance into a geopolitical tool.\n\nClimate and power politics: the ability to address climate change depends on cooperation between the US, China, India, and the EU - but geopolitical rivalry makes cooperation harder precisely when it is most needed.\n\nA* point: these three issues are not separate - they are interconnected manifestations of the same underlying multipolar transition. The Ukraine conflict has accelerated the alignment of Russia with China against a US-led bloc; this alignment in turn shapes how the Global South is courted (US-China rivalry over development aid); and the resulting bloc politics directly undermines the consensus-based cooperation that climate governance requires. A single geopolitical shift (the breakdown of the post-Cold War unipolar consensus) ripples across security, development, and environmental governance simultaneously - which is why analysing any one of these issues in isolation risks missing the larger structural story."}, {"topic": "Regionalism & the EU", "sub": "Forms of Regionalism & Debates", "q": "Explain different forms of regionalism and the key debates surrounding it.", "a": "Economic regionalism: free trade areas, customs unions, common markets (NAFTA/USMCA, EU single market, ASEAN Free Trade Area).\n\nSecurity regionalism: collective defence or security cooperation (NATO, AU peacekeeping).\n\nPolitical regionalism: political integration, shared governance, supranational institutions (the EU, to some extent the AU).\n\nDebates: the relationship between regionalism and globalisation - regionalism can be a stepping stone to globalisation (opens markets regionally first) or a barrier (creates regional trading blocs that exclude outsiders). Prospects for political regionalism - the EU is the most advanced example, but no other region has achieved comparable political integration; most regionalism remains economic. Impact on state sovereignty - economic regionalism requires states to harmonise rules and cede some control; political regionalism requires sharing sovereignty with supranational institutions.\n\nUSMCA (the successor to NAFTA, 2020), renegotiated by Trump to include stronger labour and environmental provisions, shows economic regionalism adapting to political pressures. The African Continental Free Trade Area (AfCFTA, 2021) is the world's largest free trade area by member states - it aims to boost intra-African trade but faces significant implementation challenges. ASEAN operates on a principle of non-interference in members' internal affairs - meaning it struggles to address issues like Myanmar's military coup and humanitarian crisis.\n\nA* point: the EU's status as the sole example of deep political regionalism is itself an important data point - rather than being the first of many regional blocs progressing toward political union, it appears increasingly to be a historical exception produced by very specific post-WWII circumstances (the desire to prevent another European war), suggesting that 'stepping stone to globalisation' models of regionalism may be more accurate for most other regions than 'pathway to political union' models."}, {"topic": "Regionalism & the EU", "sub": "Regional Organisations (excl. EU)", "q": "Evaluate NAFTA/USMCA, the African Union, the Arab League, and ASEAN.", "a": "NAFTA/USMCA: North American free trade area (US, Canada, Mexico) - purely economic, no political integration. Boosted trade but criticised for job losses in the US and exploitation of Mexican workers.\n\nAfrican Union (AU): 55 member states, aims to promote peace, security, and development across Africa. Has an African Court and peacekeeping missions. Weaknesses: limited funding, dependency on external donors, inability to prevent conflicts.\n\nArab League: 22 member states, promotes Arab interests and mediates disputes. Weaknesses: deep internal divisions (e.g. over Syria, the Qatar blockade), limited enforcement power, largely ineffective.\n\nASEAN: 10 Southeast Asian member states, promotes economic cooperation and regional stability - operates by consensus and non-interference. Strengths: economic integration. Weaknesses: unable to address human rights abuses in member states (Myanmar).\n\nThe AU has maintained a peacekeeping force (AMISOM/ATMIS) fighting al-Shabaab in Somalia - demonstrating regional security cooperation but also dependency on international funding. The Abraham Accords (2020) saw some Arab states normalise relations with Israel against League consensus, exposing deep internal Arab League divisions. ASEAN's response to Myanmar's 2021 military coup has been widely criticised as inadequate - the 'five-point consensus' has been largely ignored by the junta.\n\nA* point: all four organisations share a common structural feature - their founding principle of non-interference/consensus, which was essential to securing initial membership and buy-in, becomes precisely the mechanism that prevents effective action during internal crises (Myanmar for ASEAN, Syria for the Arab League, member conflicts for the AU). The condition for an organisation's existence can become the cause of its ineffectiveness."}, {"topic": "Regionalism & the EU", "sub": "European Integration: Origins & Institutions", "q": "Explain the formation, development, key institutions, and key treaties of European integration.", "a": "European integration began with the European Coal and Steel Community (1951) and the Treaty of Rome (1957) creating the EEC - driven by the desire to prevent another European war through economic integration.\n\nKey institutions: European Commission (proposes legislation, enforces treaties); European Parliament (directly elected, co-legislates with the Council); Council of the EU (national ministers, co-legislates); European Council (heads of state, sets direction); European Court of Justice (interprets EU law).\n\nEnlargement: from 6 founding members to 27 (post-Brexit), including former communist states in Eastern Europe. Turkey and Ukraine are candidate countries.\n\nKey treaties: Maastricht (1992) created the EU, established the three-pillar structure, and paved the way for the euro and common foreign policy. Lisbon (2007) reformed institutions, created the President of the European Council, strengthened the European Parliament, and made the Charter of Fundamental Rights legally binding.\n\nEconomic and monetary union - the eurozone (20 members) shares a single currency. Strengths: eliminates exchange rate risk, facilitates trade. Weaknesses: removes independent monetary policy; the eurozone crisis (2010-15) exposed structural problems.\n\nUkraine was granted EU candidate status in 2022 in response to Russia's invasion - demonstrating how geopolitics drives enlargement but raising questions about absorbing a large, conflict-affected state. During COVID recovery, the EU issued joint debt for the first time (NextGenerationEU, EUR750bn) - a significant step toward deeper fiscal integration. The EU withheld funds from Hungary and Poland over rule of law concerns - demonstrating supranational enforcement but also the difficulty of enforcing values among member states.\n\nA* point: NextGenerationEU is arguably the most significant integration step since the euro itself - joint debt issuance was previously considered politically impossible (especially for fiscally conservative states like Germany), and its acceptance under crisis conditions suggests that EU integration tends to deepen specifically during emergencies rather than through planned, incremental steps - a pattern consistent with neofunctionalist 'spillover' theory."}, {"topic": "Regionalism & the EU", "sub": "Supranationalism vs Intergovernmentalism", "q": "Distinguish supranationalism from intergovernmentalism in the EU, with contemporary examples.", "a": "Supranationalism: decisions made by EU institutions that override national governments (e.g. Commission, ECJ, European Parliament) - power is pooled above the nation-state.\n\nIntergovernmentalism: decisions made by national governments cooperating together; each state retains a veto on key issues (e.g. European Council, unanimity requirements on foreign policy and taxation).\n\nThe EU is a hybrid - some areas are supranational (trade, competition, agriculture), others remain intergovernmental (foreign policy, defence, taxation).\n\nUkraine's EU candidate status (2022) shows geopolitics driving enlargement decisions, which require unanimous (intergovernmental) agreement among member states. NextGenerationEU (EUR750bn recovery fund) represented a significant step toward deeper fiscal integration - moving an area (fiscal policy/joint debt) that had been firmly intergovernmental toward more supranational coordination. The EU's withholding of funds from Hungary and Poland over rule of law concerns demonstrates supranational enforcement power (the Commission/Court can act against a member state) but also the practical difficulty of enforcing shared values when member states resist.\n\nA* point: the supranational/intergovernmental distinction is not fixed - policy areas migrate between the two categories over time (fiscal policy has moved partway toward supranational through crisis-driven integration), and this fluidity is itself a defining feature of the EU as a 'unique' institution that does not fit neatly into either a federal state model or a traditional international organisation model."}, {"topic": "Regionalism & the EU", "sub": "The EU as a Global Actor", "q": "Evaluate the EU's political, economic, and military influence globally.", "a": "Political influence: the EU promotes democracy, human rights, and the rule of law through enlargement conditionality, neighbourhood policy, and sanctions - but struggles to act decisively on foreign policy because of the unanimity requirement.\n\nEconomic influence: the EU is the world's largest single market and trading bloc. It sets global regulatory standards (the 'Brussels effect'). Trade agreements with countries worldwide give it significant leverage.\n\nStructural constraints: 27 member states with different interests make quick decisions difficult - the unanimity requirement on foreign policy means any one state can block action.\n\nMilitary limitations: the EU has no army and depends on NATO for collective defence. Efforts to build an EU defence capability have been limited - the US provides the security umbrella for Europe.\n\nThe EU imposed 14 packages of sanctions on Russia over Ukraine, demonstrating economic hard power - but enforcement has been uneven and some member states (Hungary) have resisted. The EU is China's largest trading partner, but tensions over unfair trade practices, human rights, and Taiwan have complicated the relationship - the EU's 2024 tariffs on Chinese electric vehicles showed willingness to use economic power. Russia's invasion of Ukraine accelerated European defence spending and cooperation, but the EU remains fundamentally dependent on NATO and the US for security.\n\nA* point: the EU exhibits a striking power asymmetry - it is a genuine economic superpower (via the Brussels effect, its regulations shape global standards even for non-members) but a military minnow entirely dependent on the US. This asymmetry means the EU's global influence is heavily skewed toward areas where regulatory/economic power matters (trade, data protection, environmental standards) and weak where hard military power is decisive (the Ukraine war response has been overwhelmingly about money and sanctions, not EU military deployment)."}, {"topic": "Regionalism & the EU", "sub": "Regionalism & Contemporary Issues", "q": "How do EU climate leadership, AU conflict resolution, and ASEAN human rights illustrate the limits of regionalism?", "a": "The European Green Deal aims to make the EU carbon-neutral by 2050 - the EU leads on climate regulation but faces internal resistance (farmers' protests against green policies in 2024).\n\nThe AU has attempted to mediate in Sudan and Ethiopia but lacks the resources and authority for effective intervention.\n\nASEAN's non-interference principle means it cannot effectively address human rights abuses in Myanmar - demonstrating the limits of regionalism without political integration.\n\nA* point: these three cases form a spectrum of regional organisational capacity - the EU has the deepest political integration and can set ambitious unilateral targets (the Green Deal) but still faces domestic political backlash that limits implementation; the AU has security ambitions but lacks resources; ASEAN has neither the integration nor the mandate to act. The spectrum suggests that the depth of political integration achieved by an organisation directly correlates with - but does not guarantee - its capacity to address issues (climate, conflict, human rights) that require overriding individual member states' short-term preferences."}, {"topic": "Comparative Theories", "sub": "Realism", "q": "Explain the core tenets of realism with contemporary examples.", "a": "States are the key actors in global politics; international organisations are only as powerful as states allow them to be.\n\nInternational anarchy: there is no world government, so states must rely on self-help for survival - the international system is inherently competitive and dangerous.\n\nThe balance of power: states seek to prevent any one state from dominating, either through alliances or military buildup - stability comes from equilibrium, not cooperation.\n\nWar is inevitable: conflict is a permanent feature of international relations because of human nature (selfish, power-seeking) and the anarchical system.\n\nThe security dilemma: when one state increases its military capability for defence, other states perceive it as a threat and respond in kind, creating an arms race even when neither side wants war.\n\nRealists argue Russia's invasion of Ukraine was predictable: NATO expansion threatened Russia's sphere of influence, and Russia acted to restore the balance of power. China's military buildup in the South China Sea exemplifies the security dilemma - China claims it is defensive, but neighbouring states and the US perceive it as aggressive, leading to counter-buildups. The US spends over $800bn annually on defence, reflecting the realist logic that military power is the ultimate guarantee of security in an anarchical system.\n\nA* point: the security dilemma is realism's most analytically powerful concept because it explains conflict as an emergent, structural outcome rather than requiring any actor to be malicious - even if both China and its neighbours genuinely seek only defensive security, the inability to verify intentions under anarchy means their interactions can still produce an arms race that makes everyone less secure."}, {"topic": "Comparative Theories", "sub": "Liberalism (IR Theory)", "q": "Explain the core tenets of liberal international relations theory with contemporary examples.", "a": "Morality and optimism about human nature: humans are capable of cooperation and progress - conflict is not inevitable.\n\nHarmony and balance are possible through international institutions, law, trade, and diplomacy.\n\nComplex interdependence: states are connected through trade, finance, communication, and institutions in ways that make war costly and irrational - interdependence promotes peace.\n\nGlobal governance is achievable: international organisations (UN, WTO, ICC) can constrain state behaviour and promote cooperation, creating a rules-based international order.\n\nThe growth of international organisations demonstrates that states can cooperate beyond narrow self-interest.\n\nLiberals point to the Paris Climate Agreement as evidence that states can cooperate on global challenges through institutions and shared norms. The EU has prevented war between its members for over 70 years - liberals argue this proves that institutions and interdependence promote peace. The WTO's rules-based trading system reduces conflict by providing a framework for resolving disputes peacefully (though its effectiveness is now questioned).\n\nA* point: the EU 'peace project' claim is liberalism's strongest empirical case but also its most contested - critics note that Western Europe's post-1945 peace may owe as much to US security guarantees (NATO, realist hard power) and the shared external threat of the USSR (balance of power) as to economic integration itself, meaning the EU case may be over-determined and harder to use as clean evidence for liberal institutionalism specifically."}, {"topic": "Comparative Theories", "sub": "Realism vs Liberalism: Key Divisions", "q": "Compare realism and liberalism across human nature, order/conflict, international organisations, and the significance of states.", "a": "Human nature and power: realists see humans as power-seeking and selfish - states pursue power in a zero-sum competition. Liberals see humans as capable of cooperation - power can be shared through institutions.\n\nOrder, security, and conflict: realists - order comes from the balance of power; conflict is inevitable. Liberals - order comes from institutions, law, and interdependence; conflict can be reduced.\n\nInternational organisations: realists - organisations are tools of powerful states, not independent actors. Liberals - organisations can constrain states, shape norms, and promote cooperation.\n\nSignificance of states: realists - states are and will remain the primary actors. Liberals - states are important but share the stage with international organisations, NGOs, TNCs, and other non-state actors.\n\nOn Ukraine, realists emphasise NATO expansion and the balance of power, while liberals emphasise the violation of international law and the failure of institutions to prevent aggression. On climate change, realists are sceptical that states will sacrifice economic interests for collective action, while liberals point to the Paris Agreement as evidence of cooperative potential. On the UN Security Council, realists see it as dominated by great power interests (the P5 veto), while liberals see it as an imperfect but essential institution that provides legitimacy for collective action.\n\nA* point: the same empirical event (e.g. Ukraine, the UNSC) can be cited as evidence for both theories simultaneously - this is not a flaw in the evidence but reveals that realism and liberalism are not simply competing empirical hypotheses but different lenses that foreground different aspects of the same complex reality; the choice between them is partly a choice about what to consider analytically central."}, {"topic": "Comparative Theories", "sub": "Anarchical Society / Society of States", "q": "Explain the anarchical society (Hedley Bull) as a middle position between realism and liberalism.", "a": "Accepts that there is anarchy in the global system - no overarching authority above states. But states have an informal understanding that ensures a degree of cooperation, based on shared norms, rules, and institutions that increase trust and reciprocal behaviour.\n\nThis is a middle position between realism (pure anarchy, self-help) and liberalism (global governance is achievable).\n\nHedley Bull: the international system is an 'anarchical society' - anarchical because there is no world government, but a society because states share common interests (trade, diplomacy, international law) and develop rules to manage their relations.\n\nStates cooperate not because they are forced to, but because they recognise mutual benefits from following shared rules, even in the absence of enforcement.\n\nStates maintain embassies, negotiate treaties, and follow diplomatic protocols even during conflicts - suggesting an informal society of states operating within anarchy. States follow WTO rules not because they are forced to but because the rules-based system benefits everyone - the erosion of these norms (the US blocking the WTO appellate body) threatens the society of states. The broad international condemnation and sanctions following Russia's invasion reflect shared norms about territorial integrity, but the inability to stop Russia shows the limits of the anarchical society - cooperation depends on voluntary compliance.\n\nA* point: the anarchical society framework's distinctive contribution is explaining why states observe norms (diplomatic immunity, treaty law) even when violating them would carry no immediate material cost and even toward adversaries - something pure realism struggles to explain (why would self-interested states bother?) and something pure liberalism over-explains (it's not really 'governance', there's no enforcement) - Bull's framework captures the genuinely intermediate, norm-governed-but-unenforced character of much international behaviour."}, {"topic": "Comparative Theories", "sub": "Evaluating Realism & Liberalism Since 2000", "q": "Evaluate the case for realism and liberalism since 2000, and assess which best explains contemporary global politics.", "a": "Case for realism: 9/11 and the War on Terror demonstrated that states use military force to pursue security interests. Russia's invasion of Ukraine shows that power politics and territorial aggression remain central. China's rise is driven by state power, not liberal institutions. The UN's inability to prevent major conflicts confirms realist scepticism about international organisations.\n\nCase for liberalism: the growth of international law and institutions (ICC, Paris Agreement, EU expansion) shows cooperation is possible. Economic interdependence has made large-scale war between major trading partners less likely. NGOs and civil society play an increasingly important role in global politics. The response to COVID required international cooperation (COVAX, WHO coordination).\n\nA* evaluation: neither theory fully explains the complexity of global politics since 2000. The world exhibits both realist features (power competition, military aggression, self-interest) and liberal features (cooperation, institutions, interdependence). The anarchical society theory may offer the best middle ground - acknowledging both anarchy and the possibility of cooperation through shared norms.\n\nOn Ukraine, realists point to power politics and NATO expansion, liberals point to the violation of international law and institutional responses (sanctions, the ICC warrant), while the anarchical society framework notes that Russia broke shared norms but other states cooperated to uphold them. On climate change, realists predict states will prioritise economic growth while liberals point to the Paris Agreement - in reality both dynamics coexist, supporting the transformationalist/anarchical society view. US-China relations show simultaneous economic interdependence (liberal) and military competition (realist), demonstrating that both theories capture part of the reality.\n\nA* point: the strongest essays will resist forcing a single 'winner' between realism and liberalism, and instead argue that the explanatory power of each theory varies systematically by issue-area - realism tends to perform better explaining security/military behaviour (Ukraine, South China Sea), while liberalism tends to perform better explaining economic/environmental cooperation (trade, climate) - meaning the choice of theory should arguably be issue-specific rather than a single overarching framework for all of global politics."}]
+</script>
+
+<script id="topics-data" type="application/json">
+[
+  {
+    "num": "01",
+    "title": "The State & Globalisation",
+    "summary": "Sovereignty, the process of globalisation, and the hyperglobaliser / sceptic / transformationalist debate.",
+    "paragraphs": [
+      "A nation-state is a political community bound together by citizenship and nationality \u2014 a defined territory, a permanent population, a government, and recognition by other states. National sovereignty is the state's absolute power over its citizens and territory: internally a monopoly on legitimate force, externally no higher authority above the state.",
+      "Globalisation is the growing interconnectedness of people, countries, institutions, culture, economics and politics across borders \u2014 economic (trade, TNCs, finance), political (UN, EU, WTO, international law) and cultural (media, ideas, consumer culture).",
+      "Three positions on globalisation's impact: hyperglobalisers say the state is in decline as power shifts to markets and institutions; sceptics (realist) say states remain dominant and 'global' trade is often regional; transformationalists say states are being transformed \u2014 adapting their functions \u2014 rather than replaced.",
+      "Advantages of globalisation include economic growth, poverty reduction (China, India), cultural exchange, and international cooperation on shared problems. Disadvantages include rising inequality, loss of sovereignty, cultural homogenisation, environmental damage, and a 'race to the bottom' in wages and regulation."
+    ],
+    "astar": "Sovereignty is increasingly a <b>contested claim</b> rather than an absolute fact \u2014 the gap between legal sovereignty (recognised authority) and practical sovereignty (the ability to exercise it free of external constraint) is widening. China's growth is the most theoretically disruptive case for development theory: it achieved neo-classical outcomes via structuralist methods."
+  },
+  {
+    "num": "02",
+    "title": "Global Governance: Political & Economic",
+    "summary": "The UN, NATO, IMF, World Bank, WTO, G7/G20, and theories of poverty and development.",
+    "paragraphs": [
+      "The UN (1945) has four key bodies: the Security Council (P5 veto \u2014 binding but often paralysed), the General Assembly (universal but non-binding), ECOSOC (broad but overshadowed by IMF/World Bank), and the ICJ (authoritative but needs state consent).",
+      "NATO (1949) is a collective defence alliance \u2014 Article 5 means an attack on one is an attack on all. Its relevance was questioned pre-2022 but Finland and Sweden's 2023/24 accession reversed decades of neutrality.",
+      "The IMF and World Bank (Bretton Woods, 1944) provide short-term crisis assistance and long-term development finance respectively \u2014 both criticised for Western-dominated voting and for imposing neoliberal Structural Adjustment Programmes (SAPs) that cause social harm.",
+      "The WTO regulates trade rules but its appellate body has been blocked by the US since 2019. The G7 (advanced economies) has agenda-setting power but a shrinking share of global GDP; the G20 (80% of global GDP) is more representative but too large for decisive action.",
+      "World-systems theory (Wallerstein) and dependency theory see global inequality as structural \u2014 a core exploits a periphery. Neo-classical/Washington Consensus theory sees free markets and liberalisation as the path to development."
+    ],
+    "astar": "China's Belt and Road Initiative removes the policy leverage the IMF/World Bank historically used \u2014 a genuine structural challenge, not just rhetoric. Across the UN, IMF and World Bank, reform is blocked by the same logic: the actors who'd need to vote for reform are the ones who'd lose power from it."
+  },
+  {
+    "num": "03",
+    "title": "Global Governance: Human Rights & Environment",
+    "summary": "ICC, ICJ, R2P, humanitarian intervention, UNFCCC/IPCC, shallow vs deep ecology, and climate agreements.",
+    "paragraphs": [
+      "The 1948 UDHR set universal (but non-binding) human rights standards. The ICC (Rome Statute 2002) prosecutes individuals for genocide and war crimes but the US, China and Russia haven't ratified it \u2014 shown starkly by the 2023 ICC warrant for Putin, which is symbolically significant but practically unenforceable.",
+      "Responsibility to Protect (R2P, 2005) holds that sovereignty is conditional \u2014 if a state fails to protect its population, the international community should intervene. Libya (2011) is the pivotal case: NATO intervention under R2P removed Gaddafi but produced chaos, discrediting future interventions (contributing to non-intervention in Syria).",
+      "Shallow-green ecology is anthropocentric \u2014 solving environmental problems within existing structures via markets and technology. Deep-green ecology is ecocentric \u2014 demanding fundamental transformation, reduced consumption, and rejection of growth economics.",
+      "Key climate agreements: Rio (1992, UNFCCC + 'common but differentiated responsibilities'), Kyoto (1997, binding targets, US never ratified), Copenhagen (2009, failed), Paris (2015, voluntary NDCs, universal participation). The Loss and Damage Fund (COP27, 2022) was a breakthrough in principle but underfunded.",
+      "The tragedy of the commons explains why shared resources (the atmosphere) are overexploited \u2014 no single actor bears the full cost of their own emissions."
+    ],
+    "astar": "Every human rights institution shares the same flaw: effectiveness is <b>inversely correlated</b> with the power of the state being judged. The Kyoto-to-Paris shift traded enforceability for participation \u2014 and Trump's withdraw/rejoin/withdraw cycle shows even voluntary deals are hostage to single-state domestic politics."
+  },
+  {
+    "num": "04",
+    "title": "Power & Developments",
+    "summary": "Hard vs soft power, great powers/superpowers/BRICS, polarity, systems of government, and the democratic recession.",
+    "paragraphs": [
+      "Hard power (military, economic \u2014 sanctions, force) coerces; soft power (diplomatic, cultural) attracts. Western sanctions on Russia show hard power's limits: severe coordinated coercion hasn't ended the war because Russia has alternative markets (China, India) and absorbs domestic costs.",
+      "Classifications: great powers (UK, France, Germany, Japan) shape regional/global affairs; only the US is a full superpower (China approaching); BRICS (expanded 2024 with Egypt, Ethiopia, Iran, Saudi Arabia, UAE) represents emerging powers challenging Western institutions.",
+      "Polarity: unipolarity (one dominant power, stable but resented \u2014 US post-1991), bipolarity (two powers, MAD-based stability but proxy wars \u2014 Cold War), multipolarity (multiple centres, more representative but unstable \u2014 the emerging order). India's 'multi-alignment' (buying Russian oil, deepening US ties) is the clearest evidence of genuine multipolarity.",
+      "Systems of government range from democratic (UK, France) through semi-democratic/hybrid (Hungary, Turkey) and autocratic (China, Saudi Arabia, North Korea) to failed states (Yemen, Somalia) and rogue states (North Korea).",
+      "Freedom House records 18 consecutive years of declining global freedom \u2014 a 'democratic recession' that, alongside China's state-capitalist success, challenges Fukuyama's 'end of history' assumption that liberal democracy and free markets are an indissoluble package."
+    ],
+    "astar": "Hungary demonstrates <b>democratic backsliding from within</b> \u2014 an elected government using legal/electoral mechanisms to dismantle checks, which existing frameworks (EU membership) can't easily reverse. This challenges whether discrete categories (democratic/semi/autocratic) can capture gradual, internally-driven regime change."
+  },
+  {
+    "num": "05",
+    "title": "Regionalism & the EU",
+    "summary": "Forms of regionalism, NAFTA/AU/Arab League/ASEAN, EU institutions and treaties, supranationalism vs intergovernmentalism.",
+    "paragraphs": [
+      "Economic regionalism (free trade areas like USMCA, EU single market, ASEAN FTA), security regionalism (NATO, AU peacekeeping), and political regionalism (the EU, partly the AU) represent increasing depth of integration \u2014 but only the EU has achieved deep political integration.",
+      "NAFTA/USMCA is purely economic. The AU (55 states) has peacekeeping but limited funding. The Arab League (22 states) is hampered by deep internal divisions (Syria, the Abraham Accords). ASEAN's non-interference principle enables economic cooperation but prevents action on Myanmar.",
+      "EU integration began with the ECSC (1951) and Treaty of Rome (1957) to prevent another European war. Maastricht (1992) created the EU and the path to the euro; Lisbon (2007) strengthened the European Parliament and made the Charter of Fundamental Rights binding.",
+      "Supranationalism (EU institutions override national governments \u2014 trade, competition) vs intergovernmentalism (national governments cooperate with vetoes \u2014 foreign policy, taxation). NextGenerationEU (2020, \u20ac750bn joint debt) was a crisis-driven shift of fiscal policy toward supranationalism.",
+      "The EU is an economic superpower (the 'Brussels effect' sets global regulatory standards) but a military minnow entirely dependent on NATO/the US \u2014 a striking power asymmetry."
+    ],
+    "astar": "All non-EU regional bodies share a structural flaw: the <b>non-interference principle</b> that secures membership becomes the mechanism preventing action during internal crises (Myanmar/ASEAN, Syria/Arab League). The EU may be a <b>historical exception</b> produced by specific post-WWII circumstances, not a model other regions are progressing toward."
+  },
+  {
+    "num": "06",
+    "title": "Comparative Theories",
+    "summary": "Realism, liberalism, the anarchical society (Hedley Bull), and evaluating both since 2000.",
+    "paragraphs": [
+      "Realism: states are the key actors; international anarchy means self-help; the balance of power prevents domination; war is a permanent feature of human nature and the anarchical system; the security dilemma means defensive military build-ups are perceived as threats, fuelling arms races even without hostile intent.",
+      "Liberalism: humans are capable of cooperation; complex interdependence (trade, finance, communication) makes war costly and irrational; global governance through institutions (UN, WTO, ICC) is achievable and constrains state behaviour.",
+      "Key divisions: realists see organisations as tools of powerful states and states as the only significant actors; liberals see organisations as capable of shaping norms and see NGOs/TNCs as sharing the stage with states.",
+      "The anarchical society (Hedley Bull) is a middle position: anarchy exists (no world government) but states form a 'society' through shared norms, diplomacy and rules they follow because they recognise mutual benefit \u2014 not because they're forced to.",
+      "Since 2000: realism is supported by 9/11, the Ukraine war, China's power-driven rise, and UN paralysis. Liberalism is supported by growing international law, economic interdependence reducing major-power war, NGO influence, and COVID cooperation (COVAX)."
+    ],
+    "astar": "The same event (Ukraine, the UNSC) can support both theories \u2014 this isn't a flaw, it shows realism and liberalism are <b>different lenses</b>, not competing hypotheses. The strongest essays argue explanatory power varies by <b>issue-area</b>: realism explains security/military behaviour better; liberalism explains economic/environmental cooperation better."
+  }
+]
+</script>
+
+<script>
+
+function openOrDownload(e, el){
+  try {
+    var href = el.getAttribute('href');
+    var filename = el.getAttribute('download');
+    var byteChars = atob(href.split(',')[1]);
+    var byteNumbers = new Array(byteChars.length);
+    for (var i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], {type: 'application/pdf'});
+    var blobUrl = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){
+      window.open(blobUrl, '_blank');
+      URL.revokeObjectURL(blobUrl);
+    }, 100);
+  } catch(err) {
+    window.open(el.getAttribute('href'), '_blank');
+  }
+  e.preventDefault();
+  return false;
+}
+
+/* ===================== DATA ===================== */
+const CARDS = JSON.parse(document.getElementById('cards-data').textContent);
+const TOPICS_NOTES = JSON.parse(document.getElementById('topics-data').textContent);
+
+const TOPIC_COLORS = {
+  "The State & Globalisation": "#5eead4",
+  "Global Governance: Political & Economic": "#10b981",
+  "Global Governance: Human Rights & Environment": "#f0b429",
+  "Power & Developments": "#fb7185",
+  "Regionalism & the EU": "#60a5fa",
+  "Comparative Theories": "#c084fc"
+};
+
+/* ===================== TOPIC NOTES ===================== */
+function renderTopics(){
+  const grid = document.getElementById('topicsGrid');
+  TOPICS_NOTES.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'topic-card';
+    const cardCount = CARDS.filter(c => c.topic === t.title).length;
+    card.innerHTML = `
+      <div class="tnum">${t.num}</div>
+      <h3>${t.title}</h3>
+      <div class="tcount">${cardCount} flashcards in this topic</div>
+      <div class="tsummary">${t.summary}</div>
+      <div class="texpand">Read condensed notes</div>
+      <div class="topic-notes" id="notes-${i}">
+        ${t.paragraphs.map(p => `<p>${p}</p>`).join('')}
+        <div class="astar"><b>A* point:</b> ${t.astar}</div>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      const notes = card.querySelector('.topic-notes');
+      const expand = card.querySelector('.texpand');
+      const isOpen = notes.classList.toggle('show');
+      card.classList.toggle('open', isOpen);
+      expand.textContent = isOpen ? 'Hide notes' : 'Read condensed notes';
+    });
+    grid.appendChild(card);
+  });
+}
+
+/* ===================== FLASHCARDS ===================== */
+let mode = 'browse'; // browse | test | list
+let activeTopic = 'All';
+let deck = [];
+let idx = 0;
+let flipped = false;
+let known = new Set();
+let review = new Set();
+let done = false;
+let animating = false;
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function filteredCards(){
+  return activeTopic === 'All' ? CARDS : CARDS.filter(c => c.topic === activeTopic);
+}
+
+function resetDeck(){
+  deck = shuffle(filteredCards());
+  idx = 0; flipped = false;
+  known = new Set(); review = new Set(); done = false;
+  renderFlashcards();
+}
+
+function setMode(m){
+  mode = m;
+  document.getElementById('modeBrowse').classList.toggle('active', m === 'browse');
+  document.getElementById('modeTest').classList.toggle('active', m === 'test');
+  document.getElementById('modeList').classList.toggle('active', m === 'list');
+  resetDeck();
+}
+
+function setTopic(t){
+  activeTopic = t;
+  document.querySelectorAll('.fc-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.topic === t);
+  });
+  resetDeck();
+}
+
+function advance(dir){
+  if(animating) return;
+  animating = true;
+  flipped = false;
+  const el = document.getElementById('fcCardArea');
+  const card = el.querySelector('.fc-card');
+  if(card){
+    card.style.transition = 'opacity 0.15s, transform 0.15s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(6px)';
+  }
+  setTimeout(() => {
+    idx = ((idx + dir) + deck.length) % deck.length;
+    renderFlashcards();
+    animating = false;
+  }, 150);
+}
+
+function flipCard(){
+  flipped = !flipped;
+  renderFlashcards();
+}
+
+function markKnown(){
+  known.add(idx + '-' + deck[idx].q.slice(0,20));
+  if(idx >= deck.length - 1){ done = true; renderFlashcards(); }
+  else advance(1);
+}
+function markReview(){
+  review.add(idx + '-' + deck[idx].q.slice(0,20));
+  if(idx >= deck.length - 1){ done = true; renderFlashcards(); }
+  else advance(1);
+}
+function restartDeck(){
+  deck = shuffle(filteredCards());
+  idx = 0; flipped = false; known = new Set(); review = new Set(); done = false;
+  renderFlashcards();
+}
+
+function renderPills(){
+  const pillsEl = document.getElementById('fcPills');
+  const topics = ['All', ...new Set(CARDS.map(c => c.topic))];
+  topics.forEach(t => {
+    const count = t === 'All' ? CARDS.length : CARDS.filter(c => c.topic === t).length;
+    const b = document.createElement('button');
+    b.className = 'fc-pill' + (t === 'All' ? ' active' : '');
+    b.dataset.topic = t;
+    const SHORT_NAMES = {
+      'All': 'All',
+      'The State & Globalisation': 'State & Globalisation',
+      'Global Governance: Political & Economic': 'Governance: Political',
+      'Global Governance: Human Rights & Environment': 'Governance: Rights & Env',
+      'Power & Developments': 'Power & Developments',
+      'Regionalism & the EU': 'Regionalism & EU',
+      'Comparative Theories': 'Comparative Theories'
+    };
+    const shortName = SHORT_NAMES[t] || t;
+    b.textContent = `${shortName} (${count})`;
+    b.addEventListener('click', () => setTopic(t));
+    pillsEl.appendChild(b);
+  });
+}
+
+function renderFlashcards(){
+  const card = deck[idx];
+  const total = deck.length;
+  const pct = total ? Math.round((idx/total)*100) : 0;
+  const color = card ? TOPIC_COLORS[card.topic] : '#10b981';
+
+  document.getElementById('fcProgFill').style.width = pct + '%';
+  document.getElementById('fcProgFill').style.background = color;
+  document.getElementById('fcProgLabel').textContent = `Card ${idx+1} of ${total}`;
+
+  const scoreLabel = document.getElementById('fcScoreLabel');
+  if(mode === 'test'){
+    scoreLabel.innerHTML = `<span style="color:#5eead4">&#10003; ${known.size}</span> &middot; <span style="color:#f0b429">&#9851; ${review.size}</span>`;
+  } else {
+    scoreLabel.textContent = '';
+  }
+
+  const cardArea = document.getElementById('fcCardArea');
+  const ctrlArea = document.getElementById('fcCtrlArea');
+  const listArea = document.getElementById('fcListArea');
+
+  if(mode === 'list'){
+    cardArea.innerHTML = '';
+    ctrlArea.innerHTML = '';
+    listArea.classList.add('show');
+    listArea.innerHTML = deck.map((c,i) => `
+      <div class="fc-list-item" data-idx="${i}">
+        <div class="lit" style="color:${TOPIC_COLORS[c.topic]}">${c.topic} &middot; ${c.sub}</div>
+        <div class="liq">${c.q}</div>
+      </div>
+    `).join('');
+    listArea.querySelectorAll('.fc-list-item').forEach(el => {
+      el.addEventListener('click', () => {
+        idx = parseInt(el.dataset.idx);
+        flipped = false;
+        setMode('browse');
+      });
+    });
+    return;
+  }
+  listArea.classList.remove('show');
+
+  if(done){
+    cardArea.innerHTML = `
+      <div class="fc-done">
+        <h3>Session complete</h3>
+        <div class="scores">
+          <div class="scorebox" style="background:rgba(16,185,129,0.15); color:#5eead4;">&#10003; ${known.size} known (${total ? Math.round(known.size/total*100) : 0}%)</div>
+          <div class="scorebox" style="background:rgba(240,180,41,0.13); color:#f0b429;">&#9851; ${review.size} to review</div>
+        </div>
+      </div>
+    `;
+    ctrlArea.innerHTML = `<button class="fc-btn primary" id="restartBtn">Restart Deck</button>`;
+    document.getElementById('restartBtn').addEventListener('click', restartDeck);
+    return;
+  }
+
+  if(!card){ cardArea.innerHTML = ''; ctrlArea.innerHTML=''; return; }
+
+  cardArea.innerHTML = `
+    <div class="fc-card${flipped ? ' flipped' : ''}" style="${flipped ? `border-color:${color}` : ''}">
+      <div class="fc-badges">
+        <span class="badge-topic" style="background:${color}22; color:${color}; border-color:${color}55">${card.topic}</span>
+        <span class="badge-sub">${card.sub}</span>
+      </div>
+      ${flipped
+        ? `<div class="fc-label ans" style="color:${color}">Answer</div><div class="fc-a">${card.a.replace(/\n/g,'<br>')}</div>`
+        : `<div class="fc-label">Question</div><div class="fc-q">${card.q}</div><div class="fc-tap">Tap to reveal &rarr;</div>`
+      }
+    </div>
+  `;
+  cardArea.querySelector('.fc-card').addEventListener('click', flipCard);
+
+  if(mode === 'browse'){
+    ctrlArea.innerHTML = `
+      <button class="fc-btn" id="prevBtn">&larr; Prev</button>
+      <button class="fc-btn primary" id="flipBtn">${flipped ? 'Hide Answer' : 'Reveal Answer'}</button>
+      <button class="fc-btn" id="nextBtn">Next &rarr;</button>
+    `;
+    document.getElementById('prevBtn').addEventListener('click', () => advance(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => advance(1));
+    document.getElementById('flipBtn').addEventListener('click', flipCard);
+  } else {
+    if(!flipped){
+      ctrlArea.innerHTML = `<button class="fc-btn primary" id="flipBtn">Reveal Answer</button>`;
+      document.getElementById('flipBtn').addEventListener('click', flipCard);
+    } else {
+      ctrlArea.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:center; width:100%">
+          <div style="display:flex; gap:10px;">
+            <button class="fc-btn review" id="reviewBtn">&#9851; Needs Review</button>
+            <button class="fc-btn got" id="gotBtn">&#10003; Got It</button>
+          </div>
+          <button class="fc-skip" id="skipBtn">Skip &rarr;</button>
+        </div>
+      `;
+      document.getElementById('reviewBtn').addEventListener('click', markReview);
+      document.getElementById('gotBtn').addEventListener('click', markKnown);
+      document.getElementById('skipBtn').addEventListener('click', () => advance(1));
+    }
+  }
+}
+
+/* ===================== INIT ===================== */
+function init(){
+  renderTopics();
+  renderPills();
+  document.getElementById('modeBrowse').addEventListener('click', () => setMode('browse'));
+  document.getElementById('modeTest').addEventListener('click', () => setMode('test'));
+  document.getElementById('modeList').addEventListener('click', () => setMode('list'));
+  resetDeck();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+
+</body>
+</html>
